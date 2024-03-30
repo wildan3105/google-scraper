@@ -10,6 +10,7 @@ export const { NODE_ENV } = process.env;
 
 export const APP_ENV = process.env.APP_ENV || 'local';
 export const APP_MODE = process.env.APP_MODE || 'development';
+export const APP_NAME = process.env.APP_NAME || 'google-scraper';
 
 export const PORT = process.env.PORT;
 
