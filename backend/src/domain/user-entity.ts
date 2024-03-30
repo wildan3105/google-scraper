@@ -1,12 +1,4 @@
-import {
-    Column,
-    CreateDateColumn,
-    Entity,
-    Index,
-    OneToMany,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { IUser } from '../interfaces/user';
 import { UserVerificationCode } from './user-verification-code-entity';
 
