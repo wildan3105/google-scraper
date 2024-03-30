@@ -135,11 +135,6 @@ export class UserService {
     }
 
     async logout(id: string): Promise<void> {
-        const now = new Date();
-        await this.userRepo.updateLastLogoutAt(id, now);
-
-        // TODO: invalidate current token by adding the token to the 'blacklisted_token' so that we can validate during the login
-        // for now, I'll just emit an event to indicate certain user is performing log out
         events.emit('user_logout', { user_id: id });
     }
 }
