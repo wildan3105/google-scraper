@@ -36,16 +36,4 @@ export class UserRepository extends Repository<User> {
         const updatedUser = await this.save(userToUpdate);
         return updatedUser;
     }
-
-    async updateLastLogoutAt(user_id: string, last_logout_at: Date): Promise<User | null> {
-        const userToUpdate = await this.findOne({ where: { id: user_id } });
-        if (!userToUpdate) {
-            return null;
-        }
-
-        userToUpdate.last_logout_at = last_logout_at;
-
-        const updatedUser = await this.save(userToUpdate);
-        return updatedUser;
-    }
 }
