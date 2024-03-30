@@ -5,16 +5,12 @@ import { UserRepository } from '../libs/typeorm/repository/user';
 import { UserVerificationCodeRepository } from '../libs/typeorm/repository/user-verification-code';
 import { ErrorCodes } from '../generated/error-codes';
 import { StandardError } from '../utils/standard-error';
-import {
-    IUserCreateRequest,
-    IUserCreateResponse,
-    IUserLoginRequest,
-    IUserLoginResponse,
-    IUserDetailsResponse
-} from '../interfaces/user';
+import { IUserCreateRequest, IUserCreateResponse, IUserLoginRequest, IUserLoginResponse } from '../interfaces/user';
 import { TOKEN_SECRET_KEY } from '../config';
 import { generateRandomCode, isValidCode } from '../utils/random-code-generator';
+
 import events from '../events';
+import { UserEventTypes } from '../events/enum';
 
 const SEVEN_DAY_IN_MILIS = 7 * 24 * 60 * 60 * 1000;
 const SALT_ROUNDS = 13;
@@ -25,10 +21,7 @@ export class UserService {
     private readonly userRepo: UserRepository;
     private readonly userVerificationCodeRepo: UserVerificationCodeRepository;
 
-    constructor(
-        userRepo: UserRepository,
-        userVerificationCodeRepo: UserVerificationCodeRepository
-    ) {
+    constructor(userRepo: UserRepository, userVerificationCodeRepo: UserVerificationCodeRepository) {
         this.userRepo = userRepo;
         this.userVerificationCodeRepo = userVerificationCodeRepo;
     }
@@ -67,13 +60,11 @@ export class UserService {
         await this.userVerificationCodeRepo.createVerificationCode(verificationCodeData, createdUser);
 
         if (createdUser) {
-            events.emit('new_user', createdUser, verificationCodeData.code);
+            events.emit(UserEventTypes.newUser, createdUser, verificationCodeData.code);
         }
 
         const userCreationResponse: IUserCreateResponse = {
             id: createdUser.id,
-            first_name: createdUser.first_name,
-            last_name: createdUser.last_name,
             email: createdUser.email,
             created_at: createdUser.created_at
         };
@@ -109,6 +100,8 @@ export class UserService {
             throw new StandardError(ErrorCodes.USER_NOT_FOUND, 'User is not found');
         }
 
+        events.emit(UserEventTypes.userActivated, updatedUser.email);
+
         return true;
     }
 
@@ -136,8 +129,6 @@ export class UserService {
 
         return {
             id: userFoundAndActive.id,
-            first_name: userFoundAndActive.first_name,
-            last_name: userFoundAndActive.last_name,
             email: userFoundAndActive.email,
             access_token: token
         };
@@ -150,21 +141,5 @@ export class UserService {
         // TODO: invalidate current token by adding the token to the 'blacklisted_token' so that we can validate during the login
         // for now, I'll just emit an event to indicate certain user is performing log out
         events.emit('user_logout', { user_id: id });
-    }
-
-    async getUserDetails(userId: string): Promise<IUserDetailsResponse> {
-        const userDetails = await this.userRepo.findOneByFilter({ id: userId });
-        if (!userDetails) {
-            throw new StandardError(ErrorCodes.USER_NOT_FOUND, 'User not found');
-        }
-
-        const response = {
-            id: userDetails.id,
-            email: userDetails.email,
-            first_name: userDetails.first_name,
-            last_name: userDetails.last_name
-        };
-
-        return response;
     }
 }

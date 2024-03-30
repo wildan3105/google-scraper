@@ -14,7 +14,6 @@ export class UserController {
         this.router.post('/', this.post.bind(this));
         this.router.get('/verify', this.verify.bind(this));
         this.router.post('/auth/login', this.login.bind(this));
-        this.router.get('/profile', verifyToken, this.view.bind(this));
         this.router.post('/auth/logout', verifyToken, this.logout.bind(this));
     }
 
@@ -63,15 +62,6 @@ export class UserController {
             return res.status(200).json({
                 status: 'ok'
             });
-        } catch (err) {
-            return next(err);
-        }
-    }
-
-    public async view(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
-        try {
-            const userDetailsResponse = await this.userService.getUserDetails(req.userId);
-            return res.status(200).json(userDetailsResponse);
         } catch (err) {
             return next(err);
         }
