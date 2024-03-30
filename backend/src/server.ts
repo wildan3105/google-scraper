@@ -41,7 +41,7 @@ const setupProcessEventListeners = () => {
     try {
         const { app } = await createApp();
         const server = app.listen(app.get('port'), () => {
-            console.log(`Started express server in environment => ${app.get('env')} on port: ${app.get('port')}`);
+            console.log(`Started express server in environment: ${app.get('env')} on port: ${app.get('port')}`);
         });
 
         gracefulShutdown(server);
