@@ -16,8 +16,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - run: npm cache clean --force
       - run: npm ci
-      - run: npm run build:dev
       - run: npm run lint
       - run: npm run test
