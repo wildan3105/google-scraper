@@ -1,4 +1,4 @@
-name: Backend test (lint and test)
+name: Backend test
 
 on:
   push:
@@ -17,5 +17,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm ci
+      - run: npm run build:dev
       - run: npm run lint
       - run: npm run test
