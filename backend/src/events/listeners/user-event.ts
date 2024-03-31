@@ -4,11 +4,7 @@ import { emailTemplates, emailType } from '../../services/external/email/templat
 import { BASE_URL, APP_NAME } from '../../config';
 
 export class UserEventListener {
-    private emailService: EmailService;
-
-    constructor(emailService: EmailService) {
-        this.emailService = emailService;
-    }
+    constructor(private emailService: EmailService) {}
 
     async handleNewUser(user: User, code: string): Promise<void> {
         try {

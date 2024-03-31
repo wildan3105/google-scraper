@@ -189,37 +189,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error404Response'
   /users/{user_id}/keywords:
-    post:
-      description: Upload keywords associated to a user
-      tags:
-        - user
-        - keywords
-      operationId: userUploadKeywords
-      responses:
-        200:
-          description: Upload keywords successful
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserUploadKeywordsResponse'
-        400:
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error400Response'
-        401:
-          description: Password is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error401Response'
-        404:
-          description: User not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error404Response'
     get:
       description: Get keywords associated to a user
       tags:
@@ -591,12 +560,6 @@ components:
         message:
           type: string
           description: Message indicating successful user logs out
-    UserUploadKeywordsResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Message indicating successful user upload keywords
     UserGetKeywordsResponse:
       type: object
       properties:

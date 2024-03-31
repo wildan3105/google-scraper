@@ -10,13 +10,7 @@ interface sendEmailBody {
 }
 
 export class EmailService {
-    private baseURL: string;
-    private apiKey: string;
-
-    constructor(baseURL: string = ELASTIC_EMAIL_BASE_URL as string, apiKey: string = ELASTIC_EMAIL_API_KEY as string) {
-        this.baseURL = baseURL;
-        this.apiKey = apiKey;
-    }
+    constructor(private baseURL = ELASTIC_EMAIL_BASE_URL as string, private apiKey = ELASTIC_EMAIL_API_KEY as string) {}
 
     async sendEmail(payload: sendEmailBody): Promise<void> {
         try {
