@@ -5,9 +5,24 @@ import { ErrorCodes } from '../generated/error-codes';
 import { StandardError } from '../utils/standard-error';
 import events from '../events';
 import { KeywordEventTypes } from '../events/enum';
+import { RedisStorage } from './redis';
+import { REDIS_URL } from '../config';
+const redisConfig = {
+    redisURL: REDIS_URL as string
+};
 
 export class CSVService {
-    constructor() {}
+    private redis: RedisStorage;
+
+    constructor() {
+        this.redis = new RedisStorage(redisConfig);
+    }
+
+    private async initializeRedis(): Promise<void> {
+        if (!this.redis.initialized()) {
+            await this.redis.init();
+        }
+    }
 
     async processCSV(req: Request): Promise<any | Error> {
         // Ensure that the request contains CSV content
@@ -59,7 +74,14 @@ export class CSVService {
                 });
         });
 
-        events.emit(KeywordEventTypes.keywordsUploaded, userId, Array.from(uniqueKeywords));
+        await this.initializeRedis();
+        await this.redis.publish(
+            KeywordEventTypes.keywordsUploaded,
+            JSON.stringify({
+                userId,
+                keywords: Array.from(uniqueKeywords)
+            })
+        );
 
         return Array.from(uniqueKeywords);
     }
