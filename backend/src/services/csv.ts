@@ -33,6 +33,9 @@ export class CSVService {
                 .on('end', () => {
                     // Handle the completion of CSV parsing
                     console.log('CSV Data:', csvData);
+                    if (csvData.length > 100) {
+                        reject(new StandardError(ErrorCodes.API_VALIDATION_ERROR, 'Maximum keywords is 100'));
+                    }
                     resolve(csvData);
                 })
                 .on('error', (error) => {
