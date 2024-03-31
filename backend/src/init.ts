@@ -2,9 +2,11 @@ import 'reflect-metadata'; // for TypeORM
 
 import { HealthcheckController } from './controllers/healthcheck';
 import { UserController } from './controllers/user';
+import { CSVController } from './controllers/csv';
 
 import { HealthcheckService } from './services/healthcheck';
 import { UserService } from './services/user';
+import { CSVService } from './services/csv';
 
 import { UserRepository } from './libs/typeorm/repository/user';
 import { UserVerificationCodeRepository } from './libs/typeorm/repository/user-verification-code';
@@ -14,6 +16,7 @@ import { DataSource } from 'typeorm';
 interface InitResponse {
     healthcheckController: HealthcheckController;
     userController: UserController;
+    csvController: CSVController;
 }
 
 /**
@@ -27,13 +30,16 @@ export async function init(dataSource: DataSource): Promise<InitResponse> {
     // services
     const healthcheckService = new HealthcheckService(dataSource);
     const userService = new UserService(userRepo, userVerificationCodeRepo);
+    const csvService = new CSVService();
 
     // controllers
     const healthcheckController = new HealthcheckController(healthcheckService);
     const userController = new UserController(userService);
+    const csvController = new CSVController(csvService);
 
     return {
         healthcheckController,
-        userController
+        userController,
+        csvController
     };
 }
