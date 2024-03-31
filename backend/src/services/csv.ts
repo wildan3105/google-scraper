@@ -3,7 +3,6 @@ import csvParser from 'csv-parser';
 
 import { ErrorCodes } from '../generated/error-codes';
 import { StandardError } from '../utils/standard-error';
-import events from '../events';
 import { KeywordEventTypes } from '../events/enum';
 import { RedisStorage } from './redis';
 import { REDIS_URL } from '../config';

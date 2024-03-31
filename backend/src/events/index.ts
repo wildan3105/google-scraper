@@ -1,6 +1,5 @@
 import { EventEmitter } from 'events';
 import { UserEventListener } from './listeners/user-event';
-import { KeywordEventListener } from './subscriber/keyword-event';
 import { User } from '../domain/user-entity';
 import { EmailService } from '../services/external/email/index';
 import { UserEventTypes } from './enum';
