@@ -53,7 +53,7 @@ export class GoogleScraper {
                     numAdwords++;
                 }
             });
-            const totalResultsText = $('#result-stats').text();
+            const totalResultsText = $('#result-stats').text().trim();
 
             const htmlContent = response.data;
 
