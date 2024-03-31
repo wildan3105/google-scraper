@@ -1,4 +1,5 @@
-import puppeteer from 'puppeteer';
+import axios from 'axios';
+import cheerio from 'cheerio';
 import { userAgentList } from './user-agent-list';
 
 const baseURL = 'https://www.google.com/search';
@@ -11,15 +12,10 @@ interface SearchResult {
 }
 
 export class GoogleScraper {
-    private browser: puppeteer.Browser | null = null;
+    private userAgent: string;
 
-    constructor() {}
-
-    private async getBrowser(): Promise<puppeteer.Browser> {
-        if (!this.browser) {
-            this.browser = await puppeteer.launch();
-        }
-        return this.browser;
+    constructor() {
+        this.userAgent = this.getRandomUserAgent();
     }
 
     private getRandomUserAgent(): string {
@@ -28,26 +24,24 @@ export class GoogleScraper {
     }
 
     async scrape(keyword: string): Promise<SearchResult> {
-        const browser = await this.getBrowser();
-        const page = await browser.newPage();
-
         try {
-            const userAgent = this.getRandomUserAgent();
-            await page.setUserAgent(userAgent);
-
             const searchUrl = `${baseURL}?q=${encodeURIComponent(keyword)}&hl=en&lr=lang_en`;
-            await page.goto(searchUrl, { waitUntil: 'domcontentloaded' });
+            const response = await axios.get(searchUrl, {
+                headers: {
+                    'User-Agent': this.userAgent
+                }
+            });
 
-            await page.waitForSelector('div.g');
+            const $ = cheerio.load(response.data);
 
-            const numLinks = (await page.$$eval('div.g', (links: string | any[]) => links.length)) || 0;
-            const numAdwords = (await page.$$eval('div.ads-ad', (ads: string | any[]) => ads.length)) || 0;
-            const totalResultsText = await page.$eval('#result-stats', (el: { textContent: any }) => el.textContent);
+            const numLinks = $('div.g').length;
+            const numAdwords = $('div.ads-ad').length;
+            const totalResultsText = $('#result-stats').text();
 
             return {
                 numLinks,
                 numAdwords,
-                totalResultsText,
+                totalResultsText: totalResultsText || null,
                 keyword
             };
         } catch (error) {
@@ -58,14 +52,6 @@ export class GoogleScraper {
                 totalResultsText: null,
                 keyword
             };
-        } finally {
-            await page.close();
-        }
-    }
-
-    async close(): Promise<void> {
-        if (this.browser) {
-            await this.browser.close();
         }
     }
 }

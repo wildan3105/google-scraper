@@ -40,7 +40,8 @@ export class KeywordEventListener {
                     cleansed.keywords.map(async (keyword) => {
                         try {
                             const result = await this.googleScraper.scrape(keyword);
-                            console.log(`Scraped result for keyword "${keyword}": ${result}`);
+                            console.log(result);
+                            console.log(`Scraped result for keyword "${keyword}"`);
                         } catch (error) {
                             console.error(`Error while scraping keyword "${keyword}":`, error);
                         }
