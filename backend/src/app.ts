@@ -27,10 +27,11 @@ const swaggerDocument = YAML.parse(file);
  * @param app
  */
 async function setupRoutes(app: Application, dataSource: DataSource) {
-    const { healthcheckController, userController } = await init(dataSource);
+    const { healthcheckController, userController, csvController } = await init(dataSource);
 
     app.use('/healthcheck', healthcheckController.getRouter());
     app.use('/users', userController.getRouter());
+    app.use('/csv', csvController.getRouter());
 }
 
 /**

@@ -12,7 +12,7 @@ export class HealthcheckController {
     constructor(healthcheckService: IHealthcheckService) {
         this.healthcheckService = healthcheckService;
         this.router = Router();
-        this.router.get('/liveness', HealthcheckController.getHealthcheckLiveness);
+        this.router.get('/liveness', this.getHealthcheckLiveness.bind(this));
         this.router.get('/readiness', this.getHealthcheckReadiness.bind(this));
     }
 
@@ -24,7 +24,7 @@ export class HealthcheckController {
      * GET /healthcheck/liveness
      * Check whether app is up
      */
-    static async getHealthcheckLiveness(_: Request, res: Response): Promise<Response> {
+    public async getHealthcheckLiveness(_: Request, res: Response): Promise<Response> {
         return res.status(200).json({ status: 'OK' });
     }
 

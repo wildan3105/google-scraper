@@ -283,6 +283,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error404Response'
+  /csv/upload:
+    post:
+      description: Handle CSV upload
+      tags:
+        - csv
+      operationId: uploadCSV
+      responses:
+        200:
+          description: Upload CSV successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadCSVResponse'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400Response'
+        401:
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Response'
+        403:
+          description: Request forbidden error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403Response'
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500Response'
   /errors/{error_code}:
     get:
       tags:
@@ -567,6 +604,12 @@ components:
           type: string
           description: TBD For exact shape
     UserGetSingleKeywordsResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: TBD For exact shape
+    UploadCSVResponse:
       type: object
       properties:
         message:
