@@ -33,13 +33,37 @@ export class GoogleScraper {
             });
 
             const $ = cheerio.load(response.data);
+            const links = $('a');
+            const spans = $('span');
 
-            const numLinks = $('div.g').length;
-            const numAdwords = $('div.ads-ad').length;
+            let linkCount = 0;
+
+            links.each((_, v) => {
+                const linkHref = $(v).attr('href');
+
+                if (linkHref && (linkHref.startsWith('http://') || linkHref.startsWith('https://'))) {
+                    linkCount++;
+                }
+            });
+
+            let numAdwords = 0;
+            spans.each((_, span) => {
+                const spanText = $(span).text();
+                if (spanText && spanText.toLowerCase().includes('sponsored')) {
+                    numAdwords++;
+                }
+            });
             const totalResultsText = $('#result-stats').text();
 
+            const htmlContent = response.data;
+
+            const htmlSizeKB = Buffer.byteLength(htmlContent, 'utf8') / 1024;
+            console.log('Size of HTML content: \n before', htmlSizeKB.toFixed(2), 'KB');
+
+            // TODO: store HTML content in postgres (possibly will be done in the caller). compress/decompress TBD
+
             return {
-                numLinks,
+                numLinks: linkCount,
                 numAdwords,
                 totalResultsText: totalResultsText || null,
                 keyword
