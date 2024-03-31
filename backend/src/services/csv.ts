@@ -13,13 +13,24 @@ export class CSVService {
             throw new StandardError(ErrorCodes.API_VALIDATION_ERROR, 'Invalid Content-Type. Must be text/csv.');
         }
 
-        // Initialize an array to store the CSV data
-        const csvData: any[] = [];
+        // Initialize a Set to store unique keywords
+        const uniqueKeywords: Set<string> = new Set();
 
         // Parse the CSV content using csv-parser
         await new Promise<void | any[]>((resolve, reject) => {
+            let rowCount = 0; // Track the number of rows processed
+
             req.pipe(csvParser())
                 .on('data', (row) => {
+                    rowCount++;
+                    // Check if the number of rows exceeds 100
+                    if (rowCount > 100) {
+                        reject(
+                            new StandardError(ErrorCodes.API_VALIDATION_ERROR, 'Maximum number of rows (100) exceeded')
+                        );
+                        return;
+                    }
+
                     if (Object.keys(row)[0] !== 'keywords') {
                         reject(
                             new StandardError(ErrorCodes.API_VALIDATION_ERROR, 'First row must be equals to "keywords"')
@@ -31,21 +42,17 @@ export class CSVService {
                     values.forEach((value) => {
                         const trimmedValue = (value as string).trim(); // Remove leading and trailing whitespace
                         if (trimmedValue !== '') {
-                            csvData.push(trimmedValue); // Push trimmed value into the array
+                            uniqueKeywords.add(trimmedValue);
                         }
                     });
                 })
                 .on('end', () => {
                     // Handle the completion of CSV parsing
-                    if (csvData.length === 0) {
+                    if (Array.from(uniqueKeywords).length === 0) {
                         reject(new StandardError(ErrorCodes.API_VALIDATION_ERROR, 'Keywords cannot be empty'));
                     }
 
-                    console.log('CSV Data:', csvData);
-                    if (csvData.length > 100) {
-                        reject(new StandardError(ErrorCodes.API_VALIDATION_ERROR, 'Maximum keywords is 100'));
-                    }
-                    resolve(csvData);
+                    resolve(Array.from(uniqueKeywords));
                 })
                 .on('error', (error) => {
                     // Handle any errors that occur during CSV parsing
@@ -54,6 +61,6 @@ export class CSVService {
                 });
         });
 
-        return csvData;
+        return Array.from(uniqueKeywords);
     }
 }
