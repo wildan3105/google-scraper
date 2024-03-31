@@ -28,10 +28,19 @@ export class CSVService {
 
                     // Process each row of the CSV data
                     const values = Object.values(row);
-                    csvData.push(...values); // Push each value into the array
+                    values.forEach((value) => {
+                        const trimmedValue = (value as string).trim(); // Remove leading and trailing whitespace
+                        if (trimmedValue !== '') {
+                            csvData.push(trimmedValue); // Push trimmed value into the array
+                        }
+                    });
                 })
                 .on('end', () => {
                     // Handle the completion of CSV parsing
+                    if (csvData.length === 0) {
+                        reject(new StandardError(ErrorCodes.API_VALIDATION_ERROR, 'Keywords cannot be empty'));
+                    }
+
                     console.log('CSV Data:', csvData);
                     if (csvData.length > 100) {
                         reject(new StandardError(ErrorCodes.API_VALIDATION_ERROR, 'Maximum keywords is 100'));
