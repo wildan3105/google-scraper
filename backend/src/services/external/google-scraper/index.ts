@@ -4,11 +4,12 @@ import { userAgentList } from './user-agent-list';
 
 const baseURL = 'https://www.google.com/search';
 
-interface SearchResult {
+export interface SearchResult {
     numLinks: number;
     numAdwords: number;
     totalResultsText: string | null;
-    keyword: string;
+    keyword: string | null;
+    htmlContent: string | null;
 }
 
 export class GoogleScraper {
@@ -66,7 +67,8 @@ export class GoogleScraper {
                 numLinks: linkCount,
                 numAdwords,
                 totalResultsText: totalResultsText || null,
-                keyword
+                keyword,
+                htmlContent
             };
         } catch (error) {
             console.error(`Error while scraping keyword "${keyword}":`, error);
@@ -74,7 +76,8 @@ export class GoogleScraper {
                 numLinks: 0,
                 numAdwords: 0,
                 totalResultsText: null,
-                keyword
+                keyword,
+                htmlContent: null
             };
         }
     }
