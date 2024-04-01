@@ -1,4 +1,4 @@
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { connect } from '../../db-connection';
 
 import { GoogleScraper, SearchResult } from '../../services/external/google-scraper';
@@ -43,7 +43,7 @@ export class KeywordEventSubscriber {
         this.googleScraper = new GoogleScraper();
 
         this.dataSource = dataSource;
-        this.keywordRepo = new KeywordRepository(dataSource);
+        this.keywordRepo = new KeywordRepository(dataSource as unknown as EntityManager);
         this.userRepo = new UserRepository(dataSource);
 
         this.keywordService = new KeywordService(this.keywordRepo, this.userRepo);
