@@ -2,7 +2,7 @@ import { DataSourceOptions } from 'typeorm';
 import { entities } from '../../libs/typeorm/entities';
 import { migrations } from '../../libs/typeorm/migrations';
 
-import { IS_PRODUCTION, IS_TEST, DATABASE_URL, APP_ENV } from '../../config';
+import { IS_PRODUCTION, DATABASE_URL, APP_ENV } from '../../config';
 
 export const OrmConfig = {
     logging: ['error'],

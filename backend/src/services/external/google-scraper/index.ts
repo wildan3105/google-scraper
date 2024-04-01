@@ -82,13 +82,13 @@ export class GoogleScraper {
 
             const htmlContent = response.data;
 
-            const htmlSizeBeforeKB = Buffer.byteLength(htmlContent, 'utf8') / 1024;
+            // const htmlSizeBeforeKB = Buffer.byteLength(htmlContent, 'utf8') / 1024;
             // console.log('Size of HTML content before compression:', htmlSizeBeforeKB.toFixed(2), 'KB');
 
             // Compress the HTML content
             const compressedHtmlContent = await this.compressHtml(htmlContent);
 
-            const htmlSizeAfterKB = Buffer.byteLength(compressedHtmlContent, 'utf8') / 1024;
+            // const htmlSizeAfterKB = Buffer.byteLength(compressedHtmlContent, 'utf8') / 1024;
             // console.log('Size of HTML content after compression:', htmlSizeAfterKB.toFixed(2), 'KB');
 
             // TODO: store compressed HTML content in postgres (possibly will be done in the caller). compress/decompress TBD

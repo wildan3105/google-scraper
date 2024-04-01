@@ -11,7 +11,7 @@ import { IKeywordBulkCreateRequest } from '../../interfaces/keyword';
 import { KeywordRepository } from '../../libs/typeorm/repository/keyword';
 import { UserRepository } from '../../libs/typeorm/repository/user';
 
-import events from '../index';
+// import events from '../index';
 
 const redisConfig = {
     redisURL: REDIS_URL as string
