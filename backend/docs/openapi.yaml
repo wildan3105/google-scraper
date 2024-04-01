@@ -190,11 +190,24 @@ paths:
                 $ref: '#/components/schemas/Error404Response'
   /users/{user_id}/keywords:
     get:
-      description: Get keywords associated to a user
+      description: Get keywords associated with a user, optionally filtered by keyword name.
       tags:
         - user
         - keywords
       operationId: userGetKeywords
+      parameters:
+        - in: path
+          name: user_id
+          description: ID of the user whose keywords are to be retrieved.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: q
+          description: Keyword name to filter the results. If provided, only keywords matching the name will be returned.
+          required: false
+          schema:
+            type: string
       responses:
         200:
           description: Get keywords successful
@@ -209,11 +222,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error400Response'
         401:
-          description: Password is invalid
+          description: Unauthorized access
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error401Response'
+        403:
+          description: Request forbidden error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403Response'
         404:
           description: User not found
           content:
@@ -241,11 +260,55 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error400Response'
         401:
-          description: Password is invalid
+          description: Unauthorized access
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error401Response'
+        403:
+          description: Request forbidden error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403Response'
+        404:
+          description: User or keyword not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404Response'
+  /users/{user_id}/keywords/{keyword_id}/convert:
+    get:
+      description: Convert keyword content to HTML-ready
+      tags:
+        - user
+        - keyword
+      operationId: keywordConvertToHTML
+      responses:
+        200:
+          description: Convert to HTML successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserConvertKeywordToHTMLResponse'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400Response'
+        401:
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401Response'
+        403:
+          description: Request forbidden error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403Response'
         404:
           description: User or keyword not found
           content:
@@ -561,20 +624,47 @@ components:
           type: string
           description: Message indicating successful user logs out
     UserGetKeywordsResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: TBD For exact shape
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          keyword:
+            type: string
+          created_at:
+            type: string
+            format: date-time
+      description: An array of objects containing keyword information
     UserGetSingleKeywordsResponse:
       type: object
+      required:
+        - id
+        - keyword
+        - num_of_links
+        - num_of_adwords
+        - search_result_information
       properties:
-        message:
+        id:
           type: string
-          description: TBD For exact shape
+        keyword:
+          type: string
+        num_of_links:
+          type: number
+        num_of_adwords:
+          type: number
+        search_result_information:
+          type: string
     UploadCSVResponse:
       type: object
       properties:
         message:
           type: string
           description: TBD For exact shape
+    UserConvertKeywordToHTMLResponse:
+      type: object
+      required:
+        - html_content
+      properties:
+        html_content:
+          type: string

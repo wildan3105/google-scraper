@@ -2,19 +2,29 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { UserService } from '../services/user';
 import { IUserVerificationRequest } from '../interfaces/user';
 import verifyToken from './middlewares/auth';
+import { KeywordService } from '../services/keyword';
 
 export class UserController {
     private readonly userService: UserService;
+    private readonly keywordService: KeywordService;
 
     private router: Router;
 
-    public constructor(userService: UserService) {
+    public constructor(userService: UserService, keywordService: KeywordService) {
         this.userService = userService;
+        this.keywordService = keywordService;
+
         this.router = Router();
+
         this.router.post('/', this.post.bind(this));
         this.router.get('/verify', this.verify.bind(this));
         this.router.post('/auth/login', this.login.bind(this));
         this.router.post('/auth/logout', verifyToken, this.logout.bind(this));
+
+        // keywords
+        this.router.get('/:user_id/keywords', verifyToken, this.getUserKeywords.bind(this));
+        this.router.get('/:user_id/keywords/:keyword_id', verifyToken, this.getUserSingleKeyword.bind(this));
+        this.router.get('/:user_id/keywords/:keyword_id/convert', verifyToken, this.convertToHTML.bind(this));
     }
 
     getRouter(): Router {
@@ -62,6 +72,45 @@ export class UserController {
             return res.status(200).json({
                 status: 'ok'
             });
+        } catch (err) {
+            return next(err);
+        }
+    }
+
+    public async getUserKeywords(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+        try {
+            const keywords = await this.keywordService.getUserKeywords(
+                req.params.user_id,
+                req.userId,
+                req.query.q as string
+            );
+            return res.status(200).json(keywords);
+        } catch (err) {
+            return next(err);
+        }
+    }
+
+    public async getUserSingleKeyword(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+        try {
+            const keyword = await this.keywordService.getUserSingleKeyword(
+                req.params.user_id,
+                req.userId,
+                req.params.keyword_id
+            );
+            return res.status(200).json(keyword);
+        } catch (err) {
+            return next(err);
+        }
+    }
+
+    public async convertToHTML(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+        try {
+            const keywordHTML = await this.keywordService.convertKeywordToHTML(
+                req.params.user_id,
+                req.userId,
+                req.params.keyword_id
+            );
+            return res.status(200).send(keywordHTML);
         } catch (err) {
             return next(err);
         }
