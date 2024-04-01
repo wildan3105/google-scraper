@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { IUser } from '../interfaces/user';
+import { Keyword } from './keyword-entity';
 import { UserVerificationCode } from './user-verification-code-entity';
 
 @Entity()
@@ -24,4 +25,7 @@ export class User implements IUser {
 
     @OneToMany(() => UserVerificationCode, (code) => code.user)
     verificationCodes: UserVerificationCode[];
+
+    @OneToMany(() => Keyword, (key) => key.user)
+    keywords: Keyword[];
 }
