@@ -24,7 +24,7 @@ export class UserController {
         // keywords
         this.router.get('/:user_id/keywords', verifyToken, this.getUserKeywords.bind(this));
         this.router.get('/:user_id/keywords/:keyword_id', verifyToken, this.getUserSingleKeyword.bind(this));
-        this.router.post('/:user_id/keywords/:id/convert', verifyToken, this.convertToHTML.bind(this));
+        this.router.get('/:user_id/keywords/:keyword_id/convert', verifyToken, this.convertToHTML.bind(this));
     }
 
     getRouter(): Router {
@@ -92,7 +92,6 @@ export class UserController {
 
     public async getUserSingleKeyword(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
         try {
-            console.log(req.params);
             const keyword = await this.keywordService.getUserSingleKeyword(
                 req.params.user_id,
                 req.userId,
@@ -106,10 +105,12 @@ export class UserController {
 
     public async convertToHTML(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
         try {
-            await this.userService.logout(req.userId);
-            return res.status(200).json({
-                status: 'ok'
-            });
+            const keywordHTML = await this.keywordService.convertKeywordToHTML(
+                req.params.user_id,
+                req.userId,
+                req.params.keyword_id
+            );
+            return res.status(200).send(keywordHTML);
         } catch (err) {
             return next(err);
         }

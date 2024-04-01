@@ -3,6 +3,7 @@ import { UserRepository } from '../libs/typeorm/repository/user';
 import { ErrorCodes } from '../generated/error-codes';
 import { StandardError } from '../utils/standard-error';
 import { IKeywordBulkCreateRequest } from '../interfaces/keyword';
+import { decompressHtml } from '../utils/compressor';
 
 export class KeywordService {
     constructor(private readonly keywordRepo: KeywordRepository, private readonly userRepo: UserRepository) {}
@@ -84,5 +85,27 @@ export class KeywordService {
             num_of_adwords: keyword.num_of_adwords,
             search_result_information: keyword.search_result_information
         };
+    }
+
+    async convertKeywordToHTML(requestedUserId: string, userId: string, keywordId: string): Promise<any> {
+        if (requestedUserId !== userId) {
+            throw new StandardError(ErrorCodes.UNAUTHORIZED, 'Not allow to see other user keyword');
+        }
+
+        const existingUser = await this.userRepo.findOneByFilter({ id: userId });
+
+        if (!existingUser) {
+            throw new StandardError(ErrorCodes.USER_NOT_FOUND, 'User not found');
+        }
+
+        const keyword = await this.keywordRepo.getKeywordHTMLContent(keywordId, userId);
+
+        if (!keyword) {
+            throw new StandardError(ErrorCodes.USER_NOT_FOUND, 'Keyword not found');
+        }
+
+        const decompressedHTML = await decompressHtml(Buffer.from(keyword.html_code, 'base64'));
+
+        return decompressedHTML;
     }
 }
