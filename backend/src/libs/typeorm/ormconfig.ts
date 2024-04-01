@@ -5,7 +5,7 @@ import { migrations } from '../../libs/typeorm/migrations';
 import { IS_PRODUCTION, IS_TEST, DATABASE_URL, APP_ENV } from '../../config';
 
 export const OrmConfig = {
-    logging: !IS_PRODUCTION && !IS_TEST,
+    logging: ['error'],
     entities,
     migrations,
     subscribers: [],
@@ -35,9 +35,12 @@ export const OrmConfig = {
     replication: {
         master: {
             url: DATABASE_URL,
-            ssl: APP_ENV === 'local' ? undefined : {
-                rejectUnauthorized: false
-            }
+            ssl:
+                APP_ENV === 'local'
+                    ? undefined
+                    : {
+                          rejectUnauthorized: false
+                      }
         },
         slaves: []
     }

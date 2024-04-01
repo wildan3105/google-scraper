@@ -6,10 +6,12 @@ import { RedisStorage } from '../../services/redis';
 import { REDIS_URL } from '../../config';
 import { KeywordEventTypes } from '../enum';
 import { KeywordService } from '../../services/keyword';
-import { IKeywordCreateRequest } from '../../interfaces/keyword';
+import { IKeywordBulkCreateRequest } from '../../interfaces/keyword';
 
 import { KeywordRepository } from '../../libs/typeorm/repository/keyword';
 import { UserRepository } from '../../libs/typeorm/repository/user';
+
+import events from '../index';
 
 const redisConfig = {
     redisURL: REDIS_URL as string
@@ -20,7 +22,12 @@ interface Response {
     keywords: string[];
 }
 
-export class KeywordEventListener {
+interface scrapeResult {
+    userId: string;
+    searchResult: SearchResult[];
+}
+
+export class KeywordEventSubscriber {
     private dataSource: DataSource;
 
     private keywordRepo: KeywordRepository;
@@ -48,9 +55,9 @@ export class KeywordEventListener {
         }
     }
 
-    private async bulkCreateOrUpdateKeyword(userId: string, payload: Partial<IKeywordCreateRequest>): Promise<void> {
-        const keyword = await this.keywordService.bulkInsertOrUpdate(payload, userId);
-        console.log(keyword);
+    private async bulkInsertKeywords(payload: IKeywordBulkCreateRequest, userId: string): Promise<number | Error> {
+        const keywordsCreatedNum = await this.keywordService.bulkInsertKeywords(payload, userId);
+        return keywordsCreatedNum.numSaved;
     }
 
     async stopListening(channel: string): Promise<void> {
@@ -63,26 +70,44 @@ export class KeywordEventListener {
             await this.initializeRedis();
             await this.redis.subscribe(channel);
             this.redis.on('message', async (_, message) => {
+                console.log(`start at: ${new Date().toLocaleTimeString()}`);
                 const cleansed: Response = JSON.parse(message);
+                const scrapeResult: scrapeResult = {
+                    userId: cleansed.userId,
+                    searchResult: []
+                };
+
                 await Promise.all(
                     cleansed.keywords.map(async (keyword) => {
                         try {
                             const result: SearchResult = await this.googleScraper.scrape(keyword);
-                            console.log(result);
-                            await this.bulkCreateOrUpdateKeyword(cleansed.userId, {
-                                value: keyword,
-                                num_of_links: result.numLinks,
-                                num_of_adwords: result.numAdwords,
-                                html_code: result.htmlContent as string,
-                                search_result_information: result.totalResultsText as string
-                            });
+                            scrapeResult.searchResult.push(result);
                         } catch (error) {
                             console.error(`Error while scraping keyword "${keyword}":`, error);
                         }
                     })
                 );
+
+                // TODO: publish keywords_scraped event
+                // events.emit(KeywordEventTypes.keywordsScraped, { userId: scrapeResult.userId, totalKeywords: cleansed.keywords.length })
+
+                const keywordEntities: IKeywordBulkCreateRequest = {
+                    user_id: scrapeResult.userId,
+                    keywords: scrapeResult.searchResult.map((result) => ({
+                        value: result.keyword || '',
+                        num_of_links: result.numLinks,
+                        num_of_adwords: result.numAdwords,
+                        search_result_information: result.totalResultsText || '',
+                        html_code: result.htmlContent || ''
+                    }))
+                };
+
+                const total = await this.bulkInsertKeywords(keywordEntities, scrapeResult.userId);
+
+                console.log(`stop at: ${new Date().toLocaleTimeString()} for ${total}`);
             });
         } catch (err) {
+            // TODO: publish error event
             console.log(`Error while scraping ${err}`);
         }
     }
@@ -94,7 +119,7 @@ const startSubscriber = async () => {
         throw new Error('Failed to initialize DB from subscriber');
     }
 
-    const subscriber = new KeywordEventListener(dataSource);
+    const subscriber = new KeywordEventSubscriber(dataSource);
 
     await subscriber.handleKeywordsUploadEvent(KeywordEventTypes.keywordsUploaded);
 

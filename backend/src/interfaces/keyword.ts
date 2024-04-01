@@ -9,9 +9,13 @@ export interface IKeyword {
     html_code?: string;
 }
 
-export interface IKeywordCreateRequest {
-    value: string;
+export interface IKeywordBulkCreateRequest {
     user_id: string;
+    keywords: Keyword[];
+}
+
+interface Keyword {
+    value: string;
     num_of_links?: number;
     num_of_adwords?: number;
     search_result_information?: string;
