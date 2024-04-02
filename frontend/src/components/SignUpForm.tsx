@@ -10,7 +10,6 @@ interface SignUpFormProps {
 const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onFailure }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -20,7 +19,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onFailure }) => {
 
       setEmail("");
       setPassword("");
-      setError("");
       onSuccess("Please check your inbox or spam to verify your account");
     } catch (error: any) {
       if (
@@ -30,10 +28,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onFailure }) => {
       ) {
         const errorBody: ErrorBody = error.response.data;
         const errorMessage = errorBody.message;
-        setError(errorMessage);
         onFailure(errorMessage);
       } else {
-        setError("Error signing up. Please try again.");
         onFailure("Error signing up. Please try again.");
       }
     }

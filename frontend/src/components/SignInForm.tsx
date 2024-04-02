@@ -1,13 +1,43 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../services/userApis";
 
-const SignInForm: React.FC = () => {
+import { itemNames } from "../configs/local-storage";
+
+const genericSignInErrorMessage = "Email or password is invalid.";
+
+interface SignInFormProps {
+  onFailure: (error: string) => void;
+}
+
+const SignInForm: React.FC<SignInFormProps> = ({ onFailure }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Add your sign-up logic here (e.g., sending request to backend)
-    console.log("Signing in:", email, password);
+
+    try {
+      const { data } = await loginUser({ email, password });
+
+      setEmail("");
+      setPassword("");
+
+      localStorage.setItem(itemNames.accessToken, data.access_token);
+      localStorage.setItem(itemNames.userEmail, data.email);
+
+      navigate("/home");
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        console.log(`error on login`);
+        onFailure(genericSignInErrorMessage);
+      }
+    }
   };
 
   return (
