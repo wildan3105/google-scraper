@@ -4,6 +4,35 @@
 
   h1 {
     margin-bottom: 30px;
-    font-size: 2rem;
+    font-size: 2.5rem; // Adjust heading size to match Bootstrap
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center; // Align buttons horizontally
+    gap: 10px; // Add space between buttons
+    margin-top: 20px; // Add space between heading and buttons
+
+    .btn {
+      padding: 0.5rem 1rem; // Adjust button padding
+      font-size: 1rem; // Adjust button font size
+      text-decoration: none; // Remove default link underline
+    }
+
+    .btn-primary {
+      background-color: #0d6efd; // Use Bootstrap's primary button color
+      color: #fff; // Use white text color for primary button
+      border: none; // Remove default button border
+    }
+
+    .btn-secondary {
+      background-color: #6c757d; // Use Bootstrap's secondary button color
+      color: #fff; // Use white text color for secondary button
+      border: none; // Remove default button border
+    }
+
+    .btn:hover {
+      filter: brightness(90%); // Add hover effect
+    }
   }
 }

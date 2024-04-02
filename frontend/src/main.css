@@ -1,0 +1,86 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.87);
+  /* Adjust text color */
+}
+
+a {
+  font-weight: 500;
+  color: #0d6efd;
+  /* Use Bootstrap's primary color for links */
+  text-decoration: none;
+  /* Use Bootstrap's default link style */
+}
+
+a:hover {
+  color: #0a58ca;
+  /* Use darker shade for link hover */
+}
+
+body {
+  margin: 0;
+  font-size: 1rem;
+  /* Use Bootstrap's base font size */
+}
+
+h1 {
+  font-size: 2.5rem;
+  /* Use Bootstrap's heading sizes */
+}
+
+button {
+  border-radius: 0.25rem;
+  /* Use Bootstrap's border radius */
+  padding: 0.5rem 1rem;
+  /* Use Bootstrap's padding for buttons */
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  background-color: #0d6efd;
+  /* Use Bootstrap's primary color for buttons */
+  border: none;
+  /* Remove default button border */
+  transition: background-color 0.15s;
+  /* Add transition for hover effect */
+}
+
+button:hover {
+  background-color: #0b5ed7;
+  /* Darker shade on hover */
+}
+
+button:focus,
+button:focus-visible {
+  outline: none;
+  /* Remove default focus outline */
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.5);
+  /* Bootstrap's focus shadow */
+}
+
+/* Adjustments for light color scheme */
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #212529;
+    /* Adjust text color for light background */
+  }
+
+  a:hover {
+    color: #0056b3;
+    /* Adjust link hover color for light background */
+  }
+
+  button {
+    background-color: #f8f9fa;
+    /* Adjust button background color for light background */
+    color: #212529;
+    /* Adjust button text color for light background */
+  }
+
+  button:hover {
+    background-color: #e2e6ea;
+    /* Adjust button hover background color for light background */
+  }
+}

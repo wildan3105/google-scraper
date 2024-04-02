@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 
 const axiosInstance = axios.create({
+  baseURL: "http://localhost:3000", // Set your backend base URL
   timeout: 300000, // 5 minutes timeout
 });
 

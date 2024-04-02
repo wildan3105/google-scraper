@@ -12,7 +12,7 @@ function App() {
         <Link to="/signup" className="btn btn-primary">
           Sign Up
         </Link>
-        <Link to="/signin" className="btn btn-secondary">
+        <Link to="/signin" className="btn btn-success">
           Sign In
         </Link>
       </div>
