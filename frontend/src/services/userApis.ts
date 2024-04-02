@@ -30,6 +30,6 @@ export const loginUser = createRequest<UserRequest, void>(
 export const verifyUserEmail = createRequest<VerifyEmailRequest, void>(
   ({ code }) => ({
     method: "GET",
-    url: `/api/users/verify?code=${code}`, // Include the code in the URL
+    url: `/api/users/verify?code=${code}`,
   })
 );
