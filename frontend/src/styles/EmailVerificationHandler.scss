@@ -1,0 +1,16 @@
+.email-verification-handler-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.alert {
+  width: 300px;
+  text-align: center;
+}
+
+.email-verification-page h1 {
+  margin-bottom: 20px;
+}

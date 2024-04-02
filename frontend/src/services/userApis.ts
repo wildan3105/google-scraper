@@ -6,7 +6,7 @@ interface UserRequest {
 }
 
 interface VerifyEmailRequest {
-  link: string;
+  code: string;
 }
 
 export const createUser = createRequest<UserRequest, void>(
@@ -27,4 +27,9 @@ export const loginUser = createRequest<UserRequest, void>(
   })
 );
 
-// export const verifyUserEmail = createRequest<VerifyEmailRequest, void>()
+export const verifyUserEmail = createRequest<VerifyEmailRequest, void>(
+  ({ code }) => ({
+    method: "GET",
+    url: `/api/users/verify?code=${code}`,
+  })
+);
