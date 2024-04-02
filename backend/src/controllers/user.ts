@@ -22,9 +22,9 @@ export class UserController {
         this.router.post('/auth/logout', verifyToken, this.logout.bind(this));
 
         // keywords
-        this.router.get('/:user_id/keywords', verifyToken, this.getUserKeywords.bind(this));
-        this.router.get('/:user_id/keywords/:keyword_id', verifyToken, this.getUserSingleKeyword.bind(this));
-        this.router.get('/:user_id/keywords/:keyword_id/convert', verifyToken, this.convertToHTML.bind(this));
+        this.router.get('/keywords', verifyToken, this.getUserKeywords.bind(this));
+        this.router.get('/keywords/:keyword_id', verifyToken, this.getUserSingleKeyword.bind(this));
+        this.router.get('/keywords/:keyword_id/convert', verifyToken, this.convertToHTML.bind(this));
     }
 
     getRouter(): Router {
@@ -79,11 +79,7 @@ export class UserController {
 
     public async getUserKeywords(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
         try {
-            const keywords = await this.keywordService.getUserKeywords(
-                req.params.user_id,
-                req.userId,
-                req.query.q as string
-            );
+            const keywords = await this.keywordService.getUserKeywords(req.userId, req.query.q as string);
             return res.status(200).json(keywords);
         } catch (err) {
             return next(err);
@@ -92,11 +88,7 @@ export class UserController {
 
     public async getUserSingleKeyword(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
         try {
-            const keyword = await this.keywordService.getUserSingleKeyword(
-                req.params.user_id,
-                req.userId,
-                req.params.keyword_id
-            );
+            const keyword = await this.keywordService.getUserSingleKeyword(req.userId, req.params.keyword_id);
             return res.status(200).json(keyword);
         } catch (err) {
             return next(err);
@@ -105,11 +97,7 @@ export class UserController {
 
     public async convertToHTML(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
         try {
-            const keywordHTML = await this.keywordService.convertKeywordToHTML(
-                req.params.user_id,
-                req.userId,
-                req.params.keyword_id
-            );
+            const keywordHTML = await this.keywordService.convertKeywordToHTML(req.userId, req.params.keyword_id);
             return res.status(200).send(keywordHTML);
         } catch (err) {
             return next(err);

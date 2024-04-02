@@ -1,35 +1,32 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+// src/pages/HomePage.tsx
+
+import React, { useEffect, useState } from "react";
+import Home from "../components/Home";
+import LogoutButton from "../components/LogoutButton";
 import { itemNames } from "../configs/local-storage";
+import { getKeywordsResponse, fetchKeywords } from "../services/keywordApis";
 
 const HomePage: React.FC = () => {
-  const navigate = useNavigate();
+  const [keywords, setKeywords] = useState<getKeywordsResponse[]>([]);
   const userEmail = localStorage.getItem(itemNames.userEmail);
 
-  const handleLogout = () => {
-    // Clear the access token cookie
-    localStorage.removeItem(itemNames.accessToken);
-    localStorage.removeItem(itemNames.userEmail);
-
-    // Redirect to the landing page
-    navigate("/");
-  };
+  useEffect(() => {
+    fetchKeywords()
+      .then((response) => {
+        setKeywords(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching keywords:", error);
+      });
+  }, []);
 
   return (
     <div className="home-container">
       <header className="profile-header">
         <h2>Profile</h2>
       </header>
-      <div className="welcome-message">
-        {userEmail && (
-          <p>
-            Welcome back, <strong> {userEmail} </strong> !
-          </p>
-        )}
-      </div>
-      <button className="logout-button" onClick={handleLogout}>
-        Logout
-      </button>
+      <Home userEmail={userEmail} keywords={keywords} />
+      <LogoutButton />
     </div>
   );
 };

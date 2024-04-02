@@ -22,50 +22,34 @@ export class KeywordService {
         return createdKeyword;
     }
 
-    async getUserKeywords(requestedUserId: string, userId: string, q?: string): Promise<any> {
-        if (requestedUserId !== userId) {
-            throw new StandardError(ErrorCodes.UNAUTHORIZED, 'Not allow to see other user keyword');
-        }
-
+    async getUserKeywords(userId: string, q?: string): Promise<any> {
         const existingUser = await this.userRepo.findOneByFilter({ id: userId });
 
         if (!existingUser) {
             throw new StandardError(ErrorCodes.USER_NOT_FOUND, 'User not found');
         }
 
-        // Fetch keywords from the repository
         const keywords = await this.keywordRepo.getKeywords(userId, q);
 
-        // Create a map to store unique values of keywords
         const uniqueKeywordsMap = new Map<string, any>();
 
-        // Iterate over the keywords array to filter out duplicates and keep the latest ones
         keywords.forEach((keyword: any) => {
-            // Check if the value already exists in the map
             if (!uniqueKeywordsMap.has(keyword.value)) {
-                // If not, add it to the map
                 uniqueKeywordsMap.set(keyword.value, keyword);
             } else {
-                // If it exists, compare the created_at dates
                 const existingKeyword = uniqueKeywordsMap.get(keyword.value);
                 if (existingKeyword.created_at < keyword.created_at) {
-                    // If the current keyword is newer, update the existing value with the current one
                     uniqueKeywordsMap.set(keyword.value, keyword);
                 }
             }
         });
 
-        // Convert the unique values map back to an array
         const uniqueKeywords = Array.from(uniqueKeywordsMap.values());
 
         return uniqueKeywords;
     }
 
-    async getUserSingleKeyword(requestedUserId: string, userId: string, keywordId: string): Promise<any> {
-        if (requestedUserId !== userId) {
-            throw new StandardError(ErrorCodes.UNAUTHORIZED, 'Not allow to see other user keyword');
-        }
-
+    async getUserSingleKeyword(userId: string, keywordId: string): Promise<any> {
         const existingUser = await this.userRepo.findOneByFilter({ id: userId });
 
         if (!existingUser) {
@@ -87,11 +71,7 @@ export class KeywordService {
         };
     }
 
-    async convertKeywordToHTML(requestedUserId: string, userId: string, keywordId: string): Promise<any> {
-        if (requestedUserId !== userId) {
-            throw new StandardError(ErrorCodes.UNAUTHORIZED, 'Not allow to see other user keyword');
-        }
-
+    async convertKeywordToHTML(userId: string, keywordId: string): Promise<any> {
         const existingUser = await this.userRepo.findOneByFilter({ id: userId });
 
         if (!existingUser) {

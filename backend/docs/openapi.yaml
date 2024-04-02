@@ -188,7 +188,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error404Response'
-  /users/{user_id}/keywords:
+  /users/keywords:
     get:
       description: Get keywords associated with a user, optionally filtered by keyword name.
       tags:
@@ -196,12 +196,6 @@ paths:
         - keywords
       operationId: userGetKeywords
       parameters:
-        - in: path
-          name: user_id
-          description: ID of the user whose keywords are to be retrieved.
-          required: true
-          schema:
-            type: string
         - in: query
           name: q
           description: Keyword name to filter the results. If provided, only keywords matching the name will be returned.
@@ -239,7 +233,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error404Response'
-  /users/{user_id}/keywords/{keyword_id}:
+  /users/keywords/{keyword_id}:
     get:
       description: Get single keyword associated to a user
       tags:
@@ -277,7 +271,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error404Response'
-  /users/{user_id}/keywords/{keyword_id}/convert:
+  /users/keywords/{keyword_id}/convert:
     get:
       description: Convert keyword content to HTML-ready
       tags:
