@@ -4,6 +4,35 @@
 
   h1 {
     margin-bottom: 30px;
-    font-size: 2rem;
+    font-size: 2.5rem;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+
+    .btn {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background-color: #0d6efd;
+      color: #fff;
+      border: none;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      color: #fff;
+      border: none;
+    }
+
+    .btn:hover {
+      filter: brightness(90%);
+    }
   }
 }

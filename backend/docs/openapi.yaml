@@ -5,9 +5,9 @@ info:
   description: 'google-scraper-backend API contract'
 servers:
   - description: Remote URL of google-scraper-backend
-    url: 'https://tbd.herokuapp.com'
+    url: 'https://tbd.herokuapp.com/api'
   - description: Local development of google-scraper-backend
-    url: 'http://localhost:3000'
+    url: 'http://localhost:3000/api'
 paths:
   /:
     get:

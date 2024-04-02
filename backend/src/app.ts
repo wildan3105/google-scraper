@@ -1,4 +1,4 @@
-import express, { Application, RequestHandler } from 'express';
+import express, { Application, RequestHandler, Router } from 'express';
 import httpContext from 'express-http-context';
 import bodyParser from 'body-parser';
 import compression from 'compression';
@@ -29,9 +29,13 @@ const swaggerDocument = YAML.parse(file);
 async function setupRoutes(app: Application, dataSource: DataSource) {
     const { healthcheckController, userController, csvController } = await init(dataSource);
 
-    app.use('/healthcheck', healthcheckController.getRouter());
-    app.use('/users', userController.getRouter());
-    app.use('/csv', csvController.getRouter());
+    const apiRouter = Router();
+
+    apiRouter.use('/healthcheck', healthcheckController.getRouter());
+    apiRouter.use('/users', userController.getRouter());
+    apiRouter.use('/csv', csvController.getRouter());
+
+    app.use('/api', apiRouter);
 }
 
 /**
