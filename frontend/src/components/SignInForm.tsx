@@ -16,29 +16,26 @@ const SignInForm: React.FC = () => {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label htmlFor="email">Email:</label>
         <input
           type="email"
           id="email"
+          placeholder="Your registered email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
       </div>
       <div>
-        <label htmlFor="password">Password:</label>
         <input
           type="password"
           id="password"
+          placeholder="Your secured password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
       </div>
       <button type="submit">Sign in</button>
-      <Link to="/" className="btn">
-        Back to Home
-      </Link>
     </form>
   );
 };

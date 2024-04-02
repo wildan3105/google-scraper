@@ -5,6 +5,11 @@ const axiosInstance = axios.create({
   timeout: 300000, // 5 minutes timeout
 });
 
+export interface ErrorBody {
+  error_code: string;
+  message: string;
+}
+
 export const createRequest = <TReq, TResp = any>(
   getConfig: (request: TReq) => AxiosRequestConfig
 ) => {

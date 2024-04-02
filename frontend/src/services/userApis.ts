@@ -1,15 +1,30 @@
 import { createRequest } from "./index";
 
-interface CreateUserRequest {
+interface UserRequest {
   email: string;
   password: string;
 }
 
-export const createUser = createRequest<CreateUserRequest, void>(
+interface VerifyEmailRequest {
+  link: string;
+}
+
+export const createUser = createRequest<UserRequest, void>(
   ({ email, password }) => ({
-    method: "GET",
-    url: "/api/healthcheck/readiness",
+    method: "POST",
+    url: "/api/users",
     data: { email, password },
     headers: { "Content-Type": "application/json" },
   })
 );
+
+export const loginUser = createRequest<UserRequest, void>(
+  ({ email, password }) => ({
+    method: "POST",
+    url: "/api/users/auth/login",
+    data: { email, password },
+    headers: { "Content-Type": "application/json" },
+  })
+);
+
+// export const verifyUserEmail = createRequest<VerifyEmailRequest, void>()

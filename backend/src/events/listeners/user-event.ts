@@ -8,11 +8,11 @@ export class UserEventListener {
 
     async handleNewUser(user: User, code: string): Promise<void> {
         try {
-            const fullVerificationLink = BASE_URL + '/users/verify?code=' + code;
+            const fullVerificationLink = BASE_URL + '/api/users/verify?code=' + code;
             const emailContent = {
                 recipient: user.email,
                 subject: emailTemplates(emailType.NEW_USER),
-                content: `Hi there! <br><br> Welcome to the ${APP_NAME}. Please activate your account by clicking this link (valid for the next 7 days): <a href=${BASE_URL}/users/verify?code=${code}> Link</a> <br><br> In case the above link didn't work for you, please click below link: <br> ${fullVerificationLink}`
+                content: `Hi there! <br><br> Welcome to the ${APP_NAME}. Please activate your account by clicking this link (valid for the next 7 days): <a href=${BASE_URL}/api/users/verify?code=${code}> Link</a> <br><br> In case the above link didn't work for you, please click below link: <br> ${fullVerificationLink}`
             };
 
             console.log(`Sending email to ${user.email} for verification`);
@@ -28,7 +28,7 @@ export class UserEventListener {
             const emailContent = {
                 recipient: email,
                 subject: emailTemplates(emailType.USER_ACTIVATED),
-                content: `Hi there! <br> Congratulations! <br><br> Your account is now fully active. Please login here => https://google.com/login`
+                content: `Hi there! <br> Congratulations! <br><br> Your account is now fully active. Please login here => ${BASE_URL}/login`
             };
 
             console.log(`Sending email to ${email} for activating notification`);
