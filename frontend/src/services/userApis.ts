@@ -9,6 +9,21 @@ interface VerifyEmailRequest {
   code: string;
 }
 
+interface LoginResponse {
+  data: userLoginResponse;
+  status?: number;
+  statusText?: string;
+  headers?: any;
+  config?: any;
+  request?: any;
+}
+
+interface userLoginResponse {
+  id: string;
+  email: string;
+  access_token: string;
+}
+
 export const createUser = createRequest<UserRequest, void>(
   ({ email, password }) => ({
     method: "POST",
@@ -18,7 +33,7 @@ export const createUser = createRequest<UserRequest, void>(
   })
 );
 
-export const loginUser = createRequest<UserRequest, void>(
+export const loginUser = createRequest<UserRequest, LoginResponse>(
   ({ email, password }) => ({
     method: "POST",
     url: "/api/users/auth/login",
