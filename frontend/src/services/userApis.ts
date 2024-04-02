@@ -1,4 +1,4 @@
-import { createRequest } from "./index";
+import { createRequest, SuccessBody } from "./index";
 
 interface UserRequest {
   email: string;
@@ -9,13 +9,8 @@ interface VerifyEmailRequest {
   code: string;
 }
 
-interface LoginResponse {
+interface LoginResponse extends SuccessBody {
   data: userLoginResponse;
-  status?: number;
-  statusText?: string;
-  headers?: any;
-  config?: any;
-  request?: any;
 }
 
 interface userLoginResponse {
