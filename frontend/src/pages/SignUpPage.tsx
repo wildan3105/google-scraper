@@ -1,5 +1,3 @@
-// src/pages/SignUpPage.tsx
-
 import React, { useState } from "react";
 import SignUpForm from "../components/SignUpForm";
 import { Link } from "react-router-dom";

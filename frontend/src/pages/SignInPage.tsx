@@ -1,5 +1,3 @@
-// src/pages/SignUpPage.tsx
-
 import React from "react";
 import SignInForm from "../components/SignInForm";
 import { Link } from "react-router-dom";

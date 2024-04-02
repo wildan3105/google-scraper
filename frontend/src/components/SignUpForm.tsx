@@ -1,5 +1,3 @@
-// src/components/SignUpForm.tsx
-
 import React, { useState } from "react";
 import { createUser } from "../services/userApis";
 import { ErrorBody } from "../services";
