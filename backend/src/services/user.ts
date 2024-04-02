@@ -121,11 +121,15 @@ export class UserService {
             throw new StandardError(ErrorCodes.UNAUTHORIZED, 'Password is invalid.');
         }
 
-        const token = jwt.sign({ id: userFoundAndActive.id }, TOKEN_SECRET_KEY as string, {
-            algorithm: 'HS256',
-            allowInsecureKeySizes: true,
-            expiresIn: TOKEN_LIFETIME_IN_SECONDS
-        });
+        const token = jwt.sign(
+            { id: userFoundAndActive.id, email: userFoundAndActive.email },
+            TOKEN_SECRET_KEY as string,
+            {
+                algorithm: 'HS256',
+                allowInsecureKeySizes: true,
+                expiresIn: TOKEN_LIFETIME_IN_SECONDS
+            }
+        );
 
         return {
             id: userFoundAndActive.id,

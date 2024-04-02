@@ -24,11 +24,9 @@ const SignInForm: React.FC<SignInFormProps> = ({ onFailure }) => {
       setEmail("");
       setPassword("");
 
-      // set cookie in http data.access_token
       localStorage.setItem(itemNames.accessToken, data.access_token);
       localStorage.setItem(itemNames.userEmail, data.email);
 
-      // redirect to the /home page
       navigate("/home");
     } catch (error: any) {
       if (

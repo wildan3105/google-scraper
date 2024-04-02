@@ -30,6 +30,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
         if (decoded) {
             const decodedPayload = decoded as JwtPayload;
             req.userId = decodedPayload.id as string;
+            req.email = decodedPayload.email as string;
             next();
         } else {
             return res.status(401).send({
