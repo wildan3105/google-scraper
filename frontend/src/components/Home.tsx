@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
 import CSV from "./CSV";
 import KeywordDetails from "./KeywordDetails";
+import Toast from "./Toast"; // Import the Toast component
 
 import "../styles/Home.scss";
 import { fetchKeywords, getKeywordsResponse } from "../services/keywordApis";
@@ -21,6 +22,7 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
   } | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [toastMessage, setToastMessage] = useState<string>("Keywords fetched!");
 
   const handleKeywordClick = (keyword: { id: string; value: string }) => {
     setSelectedKeyword(keyword);
@@ -53,103 +55,111 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
     setSearchQuery(event.target.value);
   };
 
+  const hideToast = () => {
+    console.log(`toast clicked!`);
+    setToastMessage("");
+  };
+
   return (
-    <div className="homepage">
-      <div className="welcome-message">
-        {userEmail && (
-          <p>
-            Welcome back, <strong>{userEmail}</strong>!
-          </p>
-        )}
-      </div>
-      <div className="keywords-header-container">
-        <CSV />
-      </div>
-      {keywords.length > 0 && (
-        <div className="keywords-top">
-          <h4>Keywords </h4>
-          <div className="search-box">
-            <div className="mb-3">
-              <input
-                type="text"
-                className="form-control"
-                id="search"
-                placeholder="Search by keyword"
-                value={searchQuery}
-                onChange={handleSearchChange}
-              />
+    <>
+      {toastMessage && <Toast message={toastMessage} onClick={hideToast} />}
+      <div className="homepage">
+        <div className="welcome-message">
+          {userEmail && (
+            <p>
+              Welcome back, <strong>{userEmail}</strong>!
+            </p>
+          )}
+        </div>
+        <div className="keywords-header-container">
+          <CSV />
+        </div>
+        {keywords.length > 0 && (
+          <div className="keywords-top">
+            <h4>Keywords </h4>
+            <div className="search-box">
+              <div className="mb-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  id="search"
+                  placeholder="Search by keyword"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                />
+              </div>
             </div>
           </div>
-        </div>
-      )}
-      <div className="keywords">
-        {filteredKeywords.length > 0 ? (
-          <div>
-            <table className="table table-striped table-bordered">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Created At</th>
-                  <th>Value</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredKeywords
-                  .slice(indexOfFirstKeyword, indexOfLastKeyword)
-                  .map((keyword) => (
-                    <tr key={keyword.id}>
-                      <td>{keyword.id}</td>
-                      <td>
-                        {format(new Date(keyword.created_at), dateTimeFormat)}
-                      </td>
-                      <td>
-                        <button
-                          className="btn btn-link"
-                          onClick={() => handleKeywordClick(keyword)}
-                          data-bs-toggle="modal"
-                          data-bs-target="#keywordModal"
-                          title={`Click to see more Google search result about "${keyword.value}"`}
-                        >
-                          {keyword.value}
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <p>{searchQuery ? "No records found..." : "Nothing to see..."}</p>
         )}
-        <nav>
-          <ul className="pagination">
-            {Array.from(
-              Array(Math.ceil(filteredKeywords.length / itemsPerPage)).keys()
-            ).map((pageNumber) => (
-              <li
-                key={pageNumber + 1}
-                className={`page-item ${
-                  currentPage === pageNumber + 1 ? "active" : ""
-                }`}
-              >
-                <button
-                  onClick={() => paginate(pageNumber + 1)}
-                  className="page-link"
+        <div className="keywords">
+          {filteredKeywords.length > 0 ? (
+            <div>
+              <table className="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Created At</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredKeywords
+                    .slice(indexOfFirstKeyword, indexOfLastKeyword)
+                    .map((keyword) => (
+                      <tr key={keyword.id}>
+                        <td>{keyword.id}</td>
+                        <td>
+                          {format(new Date(keyword.created_at), dateTimeFormat)}
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-link"
+                            onClick={() => handleKeywordClick(keyword)}
+                            data-bs-toggle="modal"
+                            data-bs-target="#keywordModal"
+                            title={`Click to see more Google search result about "${keyword.value}"`}
+                          >
+                            {keyword.value}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p>{searchQuery ? "No records found..." : "Nothing to see..."}</p>
+          )}
+          <nav>
+            <ul className="pagination">
+              {Array.from(
+                Array(Math.ceil(filteredKeywords.length / itemsPerPage)).keys()
+              ).map((pageNumber) => (
+                <li
+                  key={pageNumber + 1}
+                  className={`page-item ${
+                    currentPage === pageNumber + 1 ? "active" : ""
+                  }`}
                 >
-                  {pageNumber + 1}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
+                  <button
+                    onClick={() => paginate(pageNumber + 1)}
+                    className="page-link"
+                  >
+                    {pageNumber + 1}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+        {selectedKeyword && (
+          <KeywordDetails
+            keywordId={selectedKeyword.id}
+            onClose={() => setSelectedKeyword(null)}
+          />
+        )}
       </div>
-      {selectedKeyword && (
-        <KeywordDetails
-          keywordId={selectedKeyword.id}
-          onClose={() => setSelectedKeyword(null)}
-        />
-      )}
-    </div>
+    </>
   );
 };
 
