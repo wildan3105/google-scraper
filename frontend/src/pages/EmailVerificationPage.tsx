@@ -8,7 +8,6 @@ const EmailVerificationPage: React.FC = () => {
 
   return (
     <div className="email-verification-page">
-      <h1>Email Verification</h1>
       <EmailVerificationHandler verificationCode={code} />
     </div>
   );
