@@ -24,7 +24,6 @@ const KeywordDetails: React.FC<KeywordDetailsProps> = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch keyword details
         const keywordResponse = await getSingleKeyword({ id: keywordId });
         setKeywordDetails(keywordResponse.data);
       } catch (error) {
@@ -35,14 +34,11 @@ const KeywordDetails: React.FC<KeywordDetailsProps> = ({
     fetchData();
   }, [keywordId]);
 
-  // Function to open HTML content in a new tab
   const openHtmlContentInNewTab = async () => {
     try {
-      // Fetch HTML content
       const htmlResponse = await getHTMLContent({ id: keywordId });
       const htmlContent = htmlResponse.data;
 
-      // Open HTML content in a new tab
       const newWindow = window.open();
       if (newWindow) {
         newWindow.document.write(htmlContent);
@@ -71,7 +67,10 @@ const KeywordDetails: React.FC<KeywordDetailsProps> = ({
               {keywordDetails.search_result_information}
             </p>
             <p>
-              <button onClick={openHtmlContentInNewTab}>
+              <button
+                className="btn btn-info"
+                onClick={openHtmlContentInNewTab}
+              >
                 View HTML Content
               </button>
             </p>
