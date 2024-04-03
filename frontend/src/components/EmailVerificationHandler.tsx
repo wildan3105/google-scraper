@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { verifyUserEmail } from "../services/userApis";
 import "../styles/EmailVerificationHandler.scss";
 import { useNavigate } from "react-router-dom";
+import { ErrorBody } from "../services";
 
 interface EmailVerificationHandlerProps {
   verificationCode: string | null;
@@ -14,6 +15,7 @@ const EmailVerificationHandler: React.FC<EmailVerificationHandlerProps> = ({
     "loading" | "success" | "failed"
   >("loading");
   const [countdown, setCountdown] = useState(5);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const mapVerificationStatusToAlert = {
@@ -35,8 +37,16 @@ const EmailVerificationHandler: React.FC<EmailVerificationHandlerProps> = ({
             navigate("/signin");
           }, 5000);
         })
-        .catch(() => {
-          setVerificationStatus("failed");
+        .catch((error: any) => {
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.message
+          ) {
+            const errorBody: ErrorBody = error.response.data;
+            setErrorMessage(errorBody.message);
+            setVerificationStatus("failed");
+          }
         });
     }
   }, [verificationCode, navigate]);
@@ -50,7 +60,7 @@ const EmailVerificationHandler: React.FC<EmailVerificationHandlerProps> = ({
         {verificationStatus === "loading" && <p>Verifying...</p>}
         {verificationStatus === "success" && <p>Verification success!</p>}
         {verificationStatus === "failed" && (
-          <p>Verification failed. Please try again.</p>
+          <p>Verification failed. Error details: {errorMessage}</p>
         )}
       </div>
       {verificationStatus === "success" && (
