@@ -66,10 +66,15 @@
   /* Set maximum width to avoid stretching */
 }
 
-.keywords h4::after {
+.keywords-top h4::after {
   content: "Only unique records are shown";
   display: block;
   font-size: 14px;
   color: #9e9191;
   /* Adjust color as needed */
+}
+
+.keywords-top .search-box {
+  width: 42%;
+  margin: 0 auto;
 }

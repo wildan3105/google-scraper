@@ -20,6 +20,7 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
     value: string;
   } | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const handleKeywordClick = (keyword: { id: string; value: string }) => {
     setSelectedKeyword(keyword);
@@ -38,13 +39,19 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
   // Calculate the indexes for the current page
   const indexOfLastKeyword = currentPage * itemsPerPage;
   const indexOfFirstKeyword = indexOfLastKeyword - itemsPerPage;
-  const currentKeywords = keywords.slice(
-    indexOfFirstKeyword,
-    indexOfLastKeyword
+
+  // Filter keywords based on search query
+  const filteredKeywords = keywords.filter((keyword) =>
+    keyword.value.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Change page
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  // Handle search input change
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
 
   return (
     <div className="homepage">
@@ -58,10 +65,26 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
       <div className="keywords-header-container">
         <CSV />
       </div>
+      {keywords.length > 0 && (
+        <div className="keywords-top">
+          <h4>Keywords </h4>
+          <div className="search-box">
+            <div className="mb-3">
+              <input
+                type="text"
+                className="form-control"
+                id="search"
+                placeholder="Search by keyword"
+                value={searchQuery}
+                onChange={handleSearchChange}
+              />
+            </div>
+          </div>
+        </div>
+      )}
       <div className="keywords">
-        {currentKeywords.length > 0 ? (
+        {filteredKeywords.length > 0 ? (
           <div>
-            <h4>Keywords </h4>
             <table className="table table-striped table-bordered">
               <thead>
                 <tr>
@@ -71,35 +94,37 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
                 </tr>
               </thead>
               <tbody>
-                {currentKeywords.map((keyword) => (
-                  <tr key={keyword.id}>
-                    <td>{keyword.id}</td>
-                    <td>
-                      {format(new Date(keyword.created_at), dateTimeFormat)}
-                    </td>
-                    <td>
-                      <button
-                        className="btn btn-link"
-                        onClick={() => handleKeywordClick(keyword)}
-                        data-bs-toggle="modal"
-                        data-bs-target="#keywordModal"
-                        title={`Click to learn more about ${keyword.value}`}
-                      >
-                        {keyword.value}
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {filteredKeywords
+                  .slice(indexOfFirstKeyword, indexOfLastKeyword)
+                  .map((keyword) => (
+                    <tr key={keyword.id}>
+                      <td>{keyword.id}</td>
+                      <td>
+                        {format(new Date(keyword.created_at), dateTimeFormat)}
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-link"
+                          onClick={() => handleKeywordClick(keyword)}
+                          data-bs-toggle="modal"
+                          data-bs-target="#keywordModal"
+                          title={`Click to see more Google search result about "${keyword.value}"`}
+                        >
+                          {keyword.value}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
         ) : (
-          <p> Nothing to see... Please upload your first CSV</p>
+          <p>{searchQuery ? "No records found..." : "Nothing to see..."}</p>
         )}
         <nav>
           <ul className="pagination">
             {Array.from(
-              Array(Math.ceil(keywords.length / itemsPerPage)).keys()
+              Array(Math.ceil(filteredKeywords.length / itemsPerPage)).keys()
             ).map((pageNumber) => (
               <li
                 key={pageNumber + 1}
