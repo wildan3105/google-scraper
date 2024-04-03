@@ -3,6 +3,8 @@ import Home from "../components/Home";
 import LogoutButton from "../components/LogoutButton";
 import { itemNames } from "../configs/local-storage";
 
+import "../styles/Home.scss";
+
 const HomePage: React.FC = () => {
   const userEmail = localStorage.getItem(itemNames.userEmail);
 

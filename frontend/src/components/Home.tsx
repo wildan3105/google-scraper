@@ -43,39 +43,43 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
         )}
       </div>
       <div className="keywords-header-container">
-        <h4 className="keywords-header">Keywords:</h4>
         <CSV />
       </div>
       <div className="keywords">
         {keywords.length > 0 ? (
-          <table className="table table-striped table-bordered">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Created At</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              {keywords.map((keyword) => (
-                <tr key={keyword.id}>
-                  <td>{keyword.id}</td>
-                  <td>{format(keyword.created_at, dateTimeFormat)}</td>
-                  <td>
-                    <button
-                      className="btn btn-link"
-                      onClick={() => handleKeywordClick(keyword)}
-                      data-bs-toggle="modal"
-                      data-bs-target="#keywordModal"
-                      title={`Click to learn more about ${keyword.value}`}
-                    >
-                      {keyword.value}
-                    </button>
-                  </td>
+          <div>
+            <h4>Keywords </h4>
+            <table className="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Created At</th>
+                  <th>Value</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {keywords.map((keyword) => (
+                  <tr key={keyword.id}>
+                    <td>{keyword.id}</td>
+                    <td>
+                      {format(new Date(keyword.created_at), dateTimeFormat)}
+                    </td>
+                    <td>
+                      <button
+                        className="btn btn-link"
+                        onClick={() => handleKeywordClick(keyword)}
+                        data-bs-toggle="modal"
+                        data-bs-target="#keywordModal"
+                        title={`Click to learn more about ${keyword.value}`}
+                      >
+                        {keyword.value}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         ) : (
           <p> Nothing to see... Please upload your first CSV</p>
         )}
