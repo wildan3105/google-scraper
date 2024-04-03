@@ -6,6 +6,7 @@ interface ModalProps {
   show: boolean;
   onHide: () => void;
   title: "Success" | "Failed";
+  titleIcon: React.ReactNode;
   content: React.ReactNode;
 }
 
@@ -13,12 +14,15 @@ const CustomModal: React.FC<ModalProps> = ({
   show,
   onHide,
   title,
+  titleIcon,
   content,
 }) => {
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header closeButton>
-        <Modal.Title>{title}</Modal.Title>
+        <Modal.Title>
+          {title} {titleIcon}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>{content}</Modal.Body>
     </Modal>

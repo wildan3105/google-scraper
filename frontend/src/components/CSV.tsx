@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCheckCircle,
+  faExclamationCircle,
+} from "@fortawesome/free-solid-svg-icons";
 
 import { uploadCSV, UploadCSVResponse } from "../services/csvApis";
 import CustomModal from "./CustomModal";
@@ -89,6 +93,7 @@ const CSV: React.FC = () => {
         show={showSuccessModal}
         onHide={() => setShowSuccessModal(false)}
         title="Success"
+        titleIcon={<FontAwesomeIcon icon={faCheckCircle} />}
         content={
           <div>
             <p>
@@ -107,6 +112,7 @@ const CSV: React.FC = () => {
         show={showErrorModal}
         onHide={() => setShowErrorModal(false)}
         title="Failed"
+        titleIcon={<FontAwesomeIcon icon={faExclamationCircle} />}
         content={
           <div>
             <p>
