@@ -26,7 +26,8 @@ const NotFoundHandler: React.FC = () => {
           <FontAwesomeIcon icon={faRoadLock} />
         </h2>
         <p>There's nothing in here.</p>
-        <p>Redirecting back to home page in {countdown} seconds...</p>
+        <p>Redirecting back to home page in...</p>
+        <h5>{countdown} second(s)</h5>
       </div>
     </div>
   );
