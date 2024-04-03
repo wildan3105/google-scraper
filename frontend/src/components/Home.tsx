@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
+import { io } from "socket.io-client";
+
 import CSV from "./CSV";
 import KeywordDetails from "./KeywordDetails";
 import Toast from "./Toast";
 
 import "../styles/Home.scss";
 import { fetchKeywords, getKeywordsResponse } from "../services/keywordApis";
+import { socket } from "../services/socket";
 
 const dateTimeFormat = "MMMM do yyyy, h:mm:ss a";
 const itemsPerPage = 25;
@@ -22,13 +25,32 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
   } | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [toastMessage, setToastMessage] = useState<string>("Keywords fetched!");
-
-  const handleKeywordClick = (keyword: { id: string; value: string }) => {
-    setSelectedKeyword(keyword);
-  };
+  const [toastMessage, setToastMessage] = useState<string>("");
+  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [fooEvents, setFooEvents] = useState([]);
 
   useEffect(() => {
+    function onConnect() {
+      console.log(`socket connected is true`);
+      setIsConnected(true);
+    }
+
+    function onDisconnect() {
+      setIsConnected(false);
+    }
+
+    function onFooEvent(msg: any) {
+      console.log(`new event!`);
+      setToastMessage("New event~!");
+    }
+
+    console.log("is WebSocket Connected?", socket.connected);
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    socket.on("keywords_scraped_succeed", onFooEvent);
+
+    // Fetch keywords
     fetchKeywords()
       .then((response) => {
         setKeywords(response.data);
@@ -36,6 +58,13 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
       .catch((error) => {
         console.error("Error fetching keywords:", error);
       });
+
+    // Clean up socket connection on component unmount
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("keywords_scraped_succeed", onFooEvent);
+    };
   }, []);
 
   const indexOfLastKeyword = currentPage * itemsPerPage;
@@ -52,8 +81,11 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
   };
 
   const hideToast = () => {
-    console.log(`toast clicked!`);
     setToastMessage("");
+  };
+
+  const handleKeywordClick = (keyword: { id: string; value: string }) => {
+    setSelectedKeyword(keyword);
   };
 
   return (

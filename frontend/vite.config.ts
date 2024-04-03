@@ -8,5 +8,13 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
+    host: "0.0.0.0",
+    proxy: {
+      "/socket": {
+        target: "http://localhost:2000",
+        changeOrigin: true,
+        ws: true,
+      },
+    },
   },
 });
