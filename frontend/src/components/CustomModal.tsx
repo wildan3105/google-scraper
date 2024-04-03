@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 interface ModalProps {
   show: boolean;
   onHide: () => void;
-  title: "Success" | "Failed";
+  title: "Success" | "Failed" | "Details";
   titleIcon: React.ReactNode;
   content: React.ReactNode;
 }

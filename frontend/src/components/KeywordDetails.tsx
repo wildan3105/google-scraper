@@ -1,8 +1,11 @@
-// components/KeywordDetailsModal.tsx
 import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+
 import CustomModal from "./CustomModal";
 import {
   getSingleKeyword,
+  getHTMLContent,
   keywordDetailsResponse,
 } from "../services/keywordApis";
 
@@ -21,23 +24,41 @@ const KeywordDetails: React.FC<KeywordDetailsProps> = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getSingleKeyword({ id: keywordId });
-        setKeywordDetails(response.data);
+        // Fetch keyword details
+        const keywordResponse = await getSingleKeyword({ id: keywordId });
+        setKeywordDetails(keywordResponse.data);
       } catch (error) {
         console.error("Error fetching keyword details:", error);
       }
     };
 
     fetchData();
-    return () => {};
   }, [keywordId]);
+
+  // Function to open HTML content in a new tab
+  const openHtmlContentInNewTab = async () => {
+    try {
+      // Fetch HTML content
+      const htmlResponse = await getHTMLContent({ id: keywordId });
+      const htmlContent = htmlResponse.data;
+
+      // Open HTML content in a new tab
+      const newWindow = window.open();
+      if (newWindow) {
+        newWindow.document.write(htmlContent);
+        newWindow.document.close();
+      }
+    } catch (error) {
+      console.error("Error fetching HTML content:", error);
+    }
+  };
 
   return (
     <CustomModal
       show={!!keywordDetails}
       onHide={onClose}
-      title="Success"
-      titleIcon={<p></p>}
+      title="Details"
+      titleIcon={<FontAwesomeIcon icon={faInfoCircle} />}
       content={
         keywordDetails && (
           <div>
@@ -49,10 +70,15 @@ const KeywordDetails: React.FC<KeywordDetailsProps> = ({
               Search Result Information:{" "}
               {keywordDetails.search_result_information}
             </p>
+            <p>
+              <button onClick={openHtmlContentInNewTab}>
+                View HTML Content
+              </button>
+            </p>
           </div>
         )
       }
-    ></CustomModal>
+    />
   );
 };
 

@@ -27,6 +27,10 @@ export interface keywordDetailsResponse {
   search_result_information: string;
 }
 
+interface getHTMLContentResponse {
+  data: any;
+}
+
 export const fetchKeywords = createRequest<void, GetUserKeywordsResponse>(
   () => ({
     method: "GET",
@@ -40,4 +44,12 @@ export const getSingleKeyword = createRequest<
 >(({ id }) => ({
   method: "GET",
   url: `/api/users/keywords/${id}`,
+}));
+
+export const getHTMLContent = createRequest<
+  getSingleKeywordRequest,
+  getHTMLContentResponse
+>(({ id }) => ({
+  method: "GET",
+  url: `/api/users/keywords/${id}/convert`,
 }));
