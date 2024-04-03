@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { format } from "date-fns";
 import CSV from "./CSV";
 import KeywordDetails from "./KeywordDetails";
 
 import "../styles/Home.scss";
 import { fetchKeywords, getKeywordsResponse } from "../services/keywordApis";
+
+const dateTimeFormat = "MMMM do yyyy, h:mm:ss a";
 
 interface HomeProps {
   userEmail: string | null;
@@ -40,11 +43,11 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
         )}
       </div>
       <div className="keywords-header-container">
-        <h3 className="keywords-header">Your Keywords:</h3>
+        <h4 className="keywords-header">Keywords:</h4>
         <CSV />
       </div>
-      {keywords.length > 0 ? (
-        <div className="keywords">
+      <div className="keywords">
+        {keywords.length > 0 ? (
           <table className="table table-striped table-bordered">
             <thead>
               <tr>
@@ -57,7 +60,7 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
               {keywords.map((keyword) => (
                 <tr key={keyword.id}>
                   <td>{keyword.id}</td>
-                  <td>{keyword.created_at}</td>
+                  <td>{format(keyword.created_at, dateTimeFormat)}</td>
                   <td>
                     <button
                       className="btn btn-link"
@@ -73,10 +76,10 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
               ))}
             </tbody>
           </table>
-        </div>
-      ) : (
-        <p> Nothing to see... Please upload your first CSV</p>
-      )}
+        ) : (
+          <p> Nothing to see... Please upload your first CSV</p>
+        )}
+      </div>
       {selectedKeyword && (
         <KeywordDetails
           keywordId={selectedKeyword.id}

@@ -64,8 +64,7 @@ const CSV: React.FC = () => {
     return lines;
   };
 
-  const handleUploadSuccess = (response: UploadCSVResponse) => {
-    console.log("Uploaded keywords:", response.data.result);
+  const handleUploadSuccess = (_: UploadCSVResponse) => {
     setShowSuccessModal(true);
   };
 
