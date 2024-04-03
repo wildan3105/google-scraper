@@ -17,6 +17,11 @@ interface HomeProps {
   userEmail: string | null;
 }
 
+interface socketEvent {
+  userId: string;
+  total: number;
+}
+
 const Home: React.FC<HomeProps> = ({ userEmail }) => {
   const [keywords, setKeywords] = useState<getKeywordsResponse[]>([]);
   const [selectedKeyword, setSelectedKeyword] = useState<{
@@ -39,9 +44,10 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
       setIsConnected(false);
     }
 
-    function onFooEvent(msg: any) {
-      console.log(`new event!`);
-      setToastMessage("New event~!");
+    function onFooEvent(msg: socketEvent) {
+      setToastMessage(
+        `${msg.total} keyword scraped successfully. Click here to see those!`
+      );
     }
 
     console.log("is WebSocket Connected?", socket.connected);
@@ -80,8 +86,15 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
     setSearchQuery(event.target.value);
   };
 
-  const hideToast = () => {
+  const hideToast = async () => {
     setToastMessage("");
+    try {
+      // Re-fetch the keywords
+      const response = await fetchKeywords();
+      setKeywords(response.data);
+    } catch (error) {
+      console.error("Error fetching keywords:", error);
+    }
   };
 
   const handleKeywordClick = (keyword: { id: string; value: string }) => {
