@@ -4,25 +4,18 @@ import "../styles/Home.scss";
 
 const CSV: React.FC = () => {
   const handleDownloadCSV = () => {
-    // Get the URL of the CSV template file
     const templateUrl = "/sample.csv";
 
-    // Create an anchor element
     const link = document.createElement("a");
 
-    // Set the href attribute to the template URL
     link.href = templateUrl;
 
-    // Set the download attribute to force download
     link.download = "sample.csv";
 
-    // Trigger a click on the anchor element
     link.click();
   };
 
-  const handleUploadCSV = () => {
-    // Logic to handle upload CSV
-  };
+  const handleUploadCSV = () => {};
 
   return (
     <div className="csv-buttons">
