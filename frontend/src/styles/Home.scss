@@ -29,3 +29,45 @@
     background-color: #d32f2f;
   }
 }
+
+.keywords {
+  display: flex;
+  /* Group elements in the same line */
+  align-items: center;
+  /* Align elements vertically */
+}
+
+.keywords-header-container {
+  display: flex;
+  /* Group elements in the same line */
+  align-items: center;
+  /* Align elements vertically */
+  margin-bottom: 20px;
+}
+
+.keywords-header {
+  margin-right: auto;
+  /* Push CSV buttons to the right */
+}
+
+.csv-buttons {
+  display: flex;
+  /* Group buttons in the same line */
+  align-items: center;
+  /* Align buttons vertically */
+}
+
+.csv-button {
+  margin-left: 10px;
+  /* Add spacing between the buttons */
+}
+
+.csv-button:first-child {
+  margin-left: 0;
+  /* Remove margin from the first button */
+}
+
+.csv-button + .csv-button {
+  margin-left: 10px;
+  /* Add spacing between adjacent buttons */
+}

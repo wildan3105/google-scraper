@@ -4,7 +4,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import { itemNames } from "../configs/local-storage";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "http://localhost:3000", // TODO: replace with the actual backend baseURL, or even better: use process.env to switch
   timeout: 300000,
 });
 

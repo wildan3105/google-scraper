@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import CSV from "./CSV";
 
 import "../styles/Home.scss";
 
@@ -31,8 +32,11 @@ const Home: React.FC<HomeProps> = ({ userEmail, keywords }) => {
           </p>
         )}
       </div>
+      <div className="keywords-header-container">
+        <h3 className="keywords-header">Your Keywords:</h3>
+        <CSV />
+      </div>
       <div className="keywords">
-        <h3>Your Keywords:</h3>
         <table className="table table-striped table-bordered">
           <thead>
             <tr>
