@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { uploadCSV, UploadCSVResponse } from "../services/csvApis";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+
+import { uploadCSV, UploadCSVResponse } from "../services/csvApis";
+import CustomModal from "./CustomModal";
 
 const CSV: React.FC = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [numOfUploadedKeywords, setNumOfUploadedKeywords] = useState(0);
-  const [erroMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleDownloadCSV = () => {
     const templateUrl = "/sample.csv";
@@ -59,20 +61,8 @@ const CSV: React.FC = () => {
   };
 
   const handleUploadSuccess = (response: UploadCSVResponse) => {
-    // Handle successful upload
     console.log("Uploaded keywords:", response.data.result);
     setShowSuccessModal(true);
-  };
-
-  const handleCloseModals = () => {
-    setShowSuccessModal(false);
-    setShowErrorModal(false);
-    const inputElement = document.getElementById(
-      "csv-upload"
-    ) as HTMLInputElement;
-    if (inputElement) {
-      inputElement.value = "";
-    }
   };
 
   return (
@@ -95,44 +85,44 @@ const CSV: React.FC = () => {
         />
       </label>
 
-      <Modal show={showSuccessModal} onHide={handleCloseModals}>
-        <Modal.Header closeButton>
-          <Modal.Title>Success</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>
-            Your CSV file has been successfully uploaded. Now it's waiting for
-            scraping result.
-          </p>
-          <p>
-            Number of (unique) keywords inside the CSV:{" "}
-            <strong>
-              {" "}
-              {numOfUploadedKeywords ? numOfUploadedKeywords : 0}{" "}
-            </strong>
-          </p>
-        </Modal.Body>
-      </Modal>
+      <CustomModal
+        show={showSuccessModal}
+        onHide={() => setShowSuccessModal(false)}
+        title="Success"
+        content={
+          <div>
+            <p>
+              Your CSV file has been successfully uploaded. Now it's waiting for
+              scraping result.
+            </p>
+            <p>
+              Number of (unique) keywords inside the CSV:{" "}
+              <strong>{numOfUploadedKeywords}</strong>
+            </p>
+          </div>
+        }
+      />
 
-      <Modal show={showErrorModal} onHide={handleCloseModals}>
-        <Modal.Header closeButton>
-          <Modal.Title>Error!</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>
-            There was an error uploading your CSV file. Here's the detail of the
-            error:
-          </p>
-          <p>
-            <strong>
-              {" "}
-              {erroMessage
-                ? erroMessage
-                : "unknown. please contact wildansnahar@gmail.com"}{" "}
-            </strong>
-          </p>
-        </Modal.Body>
-      </Modal>
+      <CustomModal
+        show={showErrorModal}
+        onHide={() => setShowErrorModal(false)}
+        title="Failed"
+        content={
+          <div>
+            <p>
+              There was an error uploading your CSV file. Here's the detail of
+              the error:
+            </p>
+            <p>
+              <strong>
+                {errorMessage
+                  ? errorMessage
+                  : "unknown. Please contact wildansnahar@gmail.com"}
+              </strong>
+            </p>
+          </div>
+        }
+      />
     </div>
   );
 };
