@@ -57,10 +57,8 @@ const CSV: React.FC = () => {
   };
 
   const parseCSV = (csvContent: string): string[] => {
-    // Split the CSV content by new lines
     const lines = csvContent.split(/\r?\n/);
 
-    // Return the keywords
     return lines;
   };
 

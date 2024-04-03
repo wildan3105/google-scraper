@@ -1,9 +1,7 @@
 .home-container {
   display: block;
   text-align: center;
-  /* Align content in the center horizontally */
   margin: auto;
-  /* Center content vertically */
   height: 100vh;
 }
 
@@ -33,7 +31,6 @@
 
 .keywords {
   width: 100%;
-  /* Set the width to 100% to take up the entire available space */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -41,29 +38,23 @@
 
 .keywords-header-container {
   width: 100%;
-  /* Set the width to 100% to take up the entire available space */
   display: block;
   justify-content: space-between;
-  /* Push the children to opposite ends */
   align-items: center;
   margin-bottom: 20px;
 }
 
 .keywords-header {
   margin-right: auto;
-  /* Push the header to the left */
 }
 
 .csv-buttons {
   margin-left: auto;
-  /* Push the CSV buttons to the right */
 }
 
 .keywords table {
   width: 100%;
-  /* Set the width to 100% to take up the entire available space */
   max-width: 100%;
-  /* Set maximum width to avoid stretching */
 }
 
 .keywords-top h4::after {
@@ -71,7 +62,6 @@
   display: block;
   font-size: 14px;
   color: #9e9191;
-  /* Adjust color as needed */
 }
 
 .keywords-top .search-box {

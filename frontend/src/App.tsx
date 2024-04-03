@@ -1,8 +1,6 @@
-// src/App.tsx
-
 import React from "react";
 import { Link } from "react-router-dom";
-import "./styles/LandingPage.scss"; // Update import path
+import "./styles/LandingPage.scss";
 
 function App() {
   return (

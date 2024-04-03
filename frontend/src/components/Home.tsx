@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
 import CSV from "./CSV";
 import KeywordDetails from "./KeywordDetails";
-import Toast from "./Toast"; // Import the Toast component
+import Toast from "./Toast";
 
 import "../styles/Home.scss";
 import { fetchKeywords, getKeywordsResponse } from "../services/keywordApis";
 
 const dateTimeFormat = "MMMM do yyyy, h:mm:ss a";
-const itemsPerPage = 25; // Number of items per page
+const itemsPerPage = 25;
 
 interface HomeProps {
   userEmail: string | null;
@@ -38,19 +38,15 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
       });
   }, []);
 
-  // Calculate the indexes for the current page
   const indexOfLastKeyword = currentPage * itemsPerPage;
   const indexOfFirstKeyword = indexOfLastKeyword - itemsPerPage;
 
-  // Filter keywords based on search query
   const filteredKeywords = keywords.filter((keyword) =>
     keyword.value.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Change page
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  // Handle search input change
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
