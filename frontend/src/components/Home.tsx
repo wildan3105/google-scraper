@@ -7,6 +7,7 @@ import "../styles/Home.scss";
 import { fetchKeywords, getKeywordsResponse } from "../services/keywordApis";
 
 const dateTimeFormat = "MMMM do yyyy, h:mm:ss a";
+const itemsPerPage = 25; // Number of items per page
 
 interface HomeProps {
   userEmail: string | null;
@@ -18,6 +19,7 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
     id: string;
     value: string;
   } | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const handleKeywordClick = (keyword: { id: string; value: string }) => {
     setSelectedKeyword(keyword);
@@ -33,6 +35,17 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
       });
   }, []);
 
+  // Calculate the indexes for the current page
+  const indexOfLastKeyword = currentPage * itemsPerPage;
+  const indexOfFirstKeyword = indexOfLastKeyword - itemsPerPage;
+  const currentKeywords = keywords.slice(
+    indexOfFirstKeyword,
+    indexOfLastKeyword
+  );
+
+  // Change page
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
   return (
     <div className="homepage">
       <div className="welcome-message">
@@ -46,7 +59,7 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
         <CSV />
       </div>
       <div className="keywords">
-        {keywords.length > 0 ? (
+        {currentKeywords.length > 0 ? (
           <div>
             <h4>Keywords </h4>
             <table className="table table-striped table-bordered">
@@ -58,7 +71,7 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
                 </tr>
               </thead>
               <tbody>
-                {keywords.map((keyword) => (
+                {currentKeywords.map((keyword) => (
                   <tr key={keyword.id}>
                     <td>{keyword.id}</td>
                     <td>
@@ -83,6 +96,27 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
         ) : (
           <p> Nothing to see... Please upload your first CSV</p>
         )}
+        <nav>
+          <ul className="pagination">
+            {Array.from(
+              Array(Math.ceil(keywords.length / itemsPerPage)).keys()
+            ).map((pageNumber) => (
+              <li
+                key={pageNumber + 1}
+                className={`page-item ${
+                  currentPage === pageNumber + 1 ? "active" : ""
+                }`}
+              >
+                <button
+                  onClick={() => paginate(pageNumber + 1)}
+                  className="page-link"
+                >
+                  {pageNumber + 1}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
       {selectedKeyword && (
         <KeywordDetails
