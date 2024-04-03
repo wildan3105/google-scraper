@@ -38,6 +38,7 @@ export class CSVService {
 
             req.pipe(csvParser())
                 .on('data', (row) => {
+                    const header = Object.keys(row)[0];
                     rowCount++;
                     if (rowCount > 100) {
                         reject(
@@ -46,10 +47,8 @@ export class CSVService {
                         return;
                     }
 
-                    if (Object.keys(row)[0] !== 'keywords') {
-                        reject(
-                            new StandardError(ErrorCodes.API_VALIDATION_ERROR, 'First row must be equals to "keywords"')
-                        );
+                    if (!header.includes('keywords')) {
+                        reject(new StandardError(ErrorCodes.API_VALIDATION_ERROR, 'First row must contain "keywords"'));
                     }
 
                     const values = Object.values(row);

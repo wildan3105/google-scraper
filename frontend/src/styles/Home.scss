@@ -29,3 +29,35 @@
     background-color: #d32f2f;
   }
 }
+
+.keywords {
+  display: flex;
+  align-items: center;
+}
+
+.keywords-header-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.keywords-header {
+  margin-right: auto;
+}
+
+.csv-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.csv-button {
+  margin-left: 10px;
+}
+
+.csv-button:first-child {
+  margin-left: 0;
+}
+
+.csv-button + .csv-button {
+  margin-left: 10px;
+}
