@@ -47,13 +47,13 @@ export class CSVService {
                         return;
                     }
 
-                    if (!header.includes('keywords')) {
+                    if (!header || !header.includes('keywords')) {
                         reject(new StandardError(ErrorCodes.API_VALIDATION_ERROR, 'First row must contain "keywords"'));
                     }
 
                     const values = Object.values(row);
                     values.forEach((value) => {
-                        const trimmedValue = (value as string).trim(); // Remove leading and trailing whitespace
+                        const trimmedValue = (value as string).trim();
                         if (trimmedValue !== '') {
                             uniqueKeywords.add(trimmedValue);
                         }
