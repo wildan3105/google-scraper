@@ -1,15 +1,20 @@
 import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCheckCircle,
+  faExclamationCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import { createUser } from "../services/userApis";
+import CustomModal from "./CustomModal";
 import { ErrorBody } from "../services";
 
-interface SignUpFormProps {
-  onSuccess: (msg: string) => void;
-  onFailure: (error: string) => void;
-}
-
-const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onFailure }) => {
+const SignUpForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -19,7 +24,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onFailure }) => {
 
       setEmail("");
       setPassword("");
-      onSuccess("Please check your inbox or spam to verify your account");
+      setShowSuccessModal(true);
     } catch (error: any) {
       if (
         error.response &&
@@ -27,10 +32,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onFailure }) => {
         error.response.data.message
       ) {
         const errorBody: ErrorBody = error.response.data;
-        const errorMessage = errorBody.message;
-        onFailure(errorMessage);
-      } else {
-        onFailure("Error signing up. Please try again.");
+        setErrorMessage(errorBody.message);
+        setShowErrorModal(true);
       }
     }
   };
@@ -60,6 +63,43 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onFailure }) => {
         </div>
         <button type="submit">Sign up</button>
       </form>
+
+      <CustomModal
+        show={showSuccessModal}
+        onHide={() => setShowSuccessModal(false)}
+        title="Success"
+        titleIcon={<FontAwesomeIcon icon={faCheckCircle} />}
+        content={
+          <div>
+            <p>
+              Registration successful. Please check your inbox or spam to verify
+              your account.
+            </p>
+          </div>
+        }
+      />
+
+      <CustomModal
+        show={showErrorModal}
+        onHide={() => setShowErrorModal(false)}
+        title="Failed"
+        titleIcon={<FontAwesomeIcon icon={faExclamationCircle} />}
+        content={
+          <div>
+            <p>
+              There was an error when signing up. Please check the error details
+              below:
+            </p>
+            <p>
+              <strong>
+                {errorMessage
+                  ? errorMessage
+                  : "network error. please try again"}
+              </strong>
+            </p>
+          </div>
+        }
+      />
     </>
   );
 };
