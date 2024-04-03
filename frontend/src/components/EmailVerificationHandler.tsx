@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { verifyUserEmail } from "../services/userApis";
 import "../styles/EmailVerificationHandler.scss";
-import { useNavigate } from "react-router-dom";
 import { ErrorBody } from "../services";
 
 interface EmailVerificationHandlerProps {

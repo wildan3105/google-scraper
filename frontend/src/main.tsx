@@ -9,6 +9,7 @@ import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
 import HomePage from "./pages/HomePage";
+import NotFoundHandler from "./components/NotFound";
 
 import ProtectedRoute from "./routes/ProtectedRoutes";
 
@@ -32,7 +33,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           </ProtectedRoute>
         }
       />
-      <Route path="*" element={<p>There's nothing in here!</p>} />
+      <Route path="*" element={<NotFoundHandler />} />
     </Routes>
   </Router>
 );

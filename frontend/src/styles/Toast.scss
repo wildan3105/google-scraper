@@ -1,0 +1,19 @@
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+}
+
+.toast-content {
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: opacity 0.3s ease;
+  pointer-events: auto;
+}
+
+.toast-content:hover {
+  opacity: 0.8;
+}
