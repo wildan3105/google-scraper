@@ -1,2 +1,2 @@
-web: npm start
-worker: node builds/src/events/subscriber/keyword-event.js
+web: npm run start-server
+worker: npm run start-worker

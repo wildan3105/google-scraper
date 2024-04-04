@@ -51,7 +51,8 @@
         "ts-node-dev": "^2.0.0"
     },
     "scripts": {
-        "start": "node builds/src/server.js",
+        "start-server": "node builds/src/server.js",
+        "start-worker": "node builds/src/events/subscriber/keyword-event.js",
         "server:dev": "ts-node-dev --poll --transpile-only --respawn src/server.ts --watch src/server.ts",
         "worker:dev": "ts-node-dev --poll --transpile-only --respawn src/events/subscriber/keyword-event.ts --watch src/events/subscriber/keyword-event.ts",
         "build": "tsc && npm run copy-docs",
