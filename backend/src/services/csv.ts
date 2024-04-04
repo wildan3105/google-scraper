@@ -24,7 +24,6 @@ export class CSVService {
     }
 
     async processCSV(req: Request): Promise<any | Error> {
-        // Ensure that the request contains CSV content
         if (req.headers['content-type'] !== 'text/csv') {
             throw new StandardError(ErrorCodes.API_VALIDATION_ERROR, 'Invalid Content-Type. Must be text/csv.');
         }
