@@ -21,7 +21,7 @@ export default defineConfig(({ mode }) => {
       host: "0.0.0.0",
       proxy: {
         "/socket": {
-          target: process.env.SOCKET_URL || "http://localhost:2000",
+          target: process.env.SOCKET_URL,
           changeOrigin: true,
           ws: true,
         },
