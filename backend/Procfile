@@ -1,0 +1,2 @@
+web: npm start
+worker: node builds/src/events/subscriber/keyword-event.js
