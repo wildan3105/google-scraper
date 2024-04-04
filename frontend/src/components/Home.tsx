@@ -63,6 +63,7 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
       }
     }
 
+    socket.connect();
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on(socketEventNames.keywordsScrapped, onSocketEvent);
