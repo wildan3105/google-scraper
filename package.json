@@ -4,8 +4,8 @@
   "description": "Fullstack google scraper app",
   "main": "index.js",
   "scripts": {
-    "start": "node /backend/builds/src/server.js",
-    "build": "tsc && cp -r /backend/docs /backend/builds/"
+    "start": "cd backend && npm run start-server",
+    "build": "cd backend && npm run build"
   },
   "author": "",
   "license": "ISC"

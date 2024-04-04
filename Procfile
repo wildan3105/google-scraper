@@ -1,2 +1,2 @@
-web: node /backend/builds/src/server.js
+web: npm start
 worker: node /backend/builds/src/events/subscriber/keyword-event.js
