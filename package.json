@@ -1,0 +1,11 @@
+{
+  "name": "google-scraper",
+  "version": "1.0.0",
+  "description": "Fullstack google scraper app",
+  "main": "index.js",
+  "scripts": {
+    "start": "node /backend/builds/src/server.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
