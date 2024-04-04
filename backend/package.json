@@ -56,7 +56,7 @@
         "start-worker": "node builds/src/events/subscriber/keyword-event.js",
         "server:dev": "ts-node-dev --poll --transpile-only --respawn src/server.ts --watch src/server.ts",
         "worker:dev": "ts-node-dev --poll --transpile-only --respawn src/events/subscriber/keyword-event.ts --watch src/events/subscriber/keyword-event.ts",
-        "build": "rm -rf builds && tsc && npm run copy-docs",
+        "build": "npm cache clean --force && rm -rf node_modules && npm i && rm -rf builds && tsc && npm run copy-docs",
         "build:dev": "tsc",
         "copy-docs": "cp -r docs builds/",
         "lint": "eslint . --ext .ts",
