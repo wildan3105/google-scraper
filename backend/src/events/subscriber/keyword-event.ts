@@ -1,17 +1,22 @@
 import { DataSource, EntityManager } from 'typeorm';
-import { connect } from '../../db-connection';
+import { Server } from 'socket.io';
+import express from 'express';
+import http from 'http';
 
+import { connect } from '../../db-connection';
 import { GoogleScraper, SearchResult } from '../../services/external/google-scraper';
 import { RedisStorage } from '../../services/redis';
 import { REDIS_URL } from '../../config';
 import { KeywordEventTypes } from '../enum';
 import { KeywordService } from '../../services/keyword';
 import { IKeywordBulkCreateRequest } from '../../interfaces/keyword';
-
 import { KeywordRepository } from '../../libs/typeorm/repository/keyword';
 import { UserRepository } from '../../libs/typeorm/repository/user';
+import { SOCKET_PORT } from '../../config';
 
-// import events from '../index';
+const socketEvents = {
+    keywordsScrapedSuccessfully: 'keywords_scraped_succeed'
+};
 
 const redisConfig = {
     redisURL: REDIS_URL as string
@@ -37,8 +42,9 @@ export class KeywordEventSubscriber {
 
     private googleScraper: GoogleScraper;
     private redis: RedisStorage;
+    private io: Server;
 
-    constructor(dataSource: DataSource) {
+    constructor(dataSource: DataSource, io: Server) {
         this.redis = new RedisStorage(redisConfig);
         this.googleScraper = new GoogleScraper();
 
@@ -47,6 +53,7 @@ export class KeywordEventSubscriber {
         this.userRepo = new UserRepository(dataSource);
 
         this.keywordService = new KeywordService(this.keywordRepo, this.userRepo);
+        this.io = io;
     }
 
     private async initializeRedis(): Promise<void> {
@@ -88,9 +95,6 @@ export class KeywordEventSubscriber {
                     })
                 );
 
-                // TODO: publish keywords_scraped event
-                // events.emit(KeywordEventTypes.keywordsScraped, { userId: scrapeResult.userId, totalKeywords: cleansed.keywords.length })
-
                 const keywordEntities: IKeywordBulkCreateRequest = {
                     user_id: scrapeResult.userId,
                     keywords: scrapeResult.searchResult.map((result) => ({
@@ -103,6 +107,8 @@ export class KeywordEventSubscriber {
                 };
 
                 const total = await this.bulkInsertKeywords(keywordEntities, scrapeResult.userId);
+
+                this.io.emit(socketEvents.keywordsScrapedSuccessfully, { userId: cleansed.userId, total });
 
                 console.log(`stop at: ${new Date().toLocaleTimeString()} for ${total}`);
             });
@@ -119,11 +125,23 @@ const startSubscriber = async () => {
         throw new Error('Failed to initialize DB from subscriber');
     }
 
-    const subscriber = new KeywordEventSubscriber(dataSource);
+    const app = express();
+    const server = http.createServer(app);
+    const io = new Server(server);
+
+    io.on('connection', () => {
+        console.log(`client is connected!`);
+    });
+
+    const subscriber = new KeywordEventSubscriber(dataSource, io);
 
     await subscriber.handleKeywordsUploadEvent(KeywordEventTypes.keywordsUploaded);
 
     console.log(`subscriber started`);
+
+    server.listen(SOCKET_PORT, () => {
+        console.log(`listening on ${SOCKET_PORT}`);
+    });
 
     return async () => {
         console.log(`stopping subscriber`);

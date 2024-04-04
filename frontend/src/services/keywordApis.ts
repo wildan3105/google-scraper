@@ -1,6 +1,5 @@
 import { createRequest, SuccessBody } from "./index";
 
-// TODO: extract this common interface out
 export interface GetUserKeywordsResponse extends SuccessBody {
   data: getKeywordsResponse[];
 }

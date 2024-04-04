@@ -1,5 +1,3 @@
-// services/index.ts
-
 import axios, { AxiosRequestConfig } from "axios";
 import { itemNames } from "../configs/local-storage";
 

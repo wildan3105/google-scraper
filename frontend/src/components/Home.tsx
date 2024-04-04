@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
+
 import CSV from "./CSV";
 import KeywordDetails from "./KeywordDetails";
-import Toast from "./Toast"; // Import the Toast component
+import Toast from "./Toast";
 
 import "../styles/Home.scss";
 import { fetchKeywords, getKeywordsResponse } from "../services/keywordApis";
+import { socket } from "../services/socket";
+import { socketEvents } from "../configs/socket-event";
 
 const dateTimeFormat = "MMMM do yyyy, h:mm:ss a";
-const itemsPerPage = 25; // Number of items per page
+const itemsPerPage = 25;
 
 interface HomeProps {
   userEmail: string | null;
+}
+
+interface socketEvent {
+  userId: string;
+  total: number;
 }
 
 const Home: React.FC<HomeProps> = ({ userEmail }) => {
@@ -22,13 +30,28 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
   } | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [toastMessage, setToastMessage] = useState<string>("Keywords fetched!");
-
-  const handleKeywordClick = (keyword: { id: string; value: string }) => {
-    setSelectedKeyword(keyword);
-  };
+  const [toastMessage, setToastMessage] = useState<string>("");
+  const [_, setIsConnected] = useState(socket.connected);
 
   useEffect(() => {
+    function onConnect() {
+      setIsConnected(true);
+    }
+
+    function onDisconnect() {
+      setIsConnected(false);
+    }
+
+    function onSocketEvent(msg: socketEvent) {
+      setToastMessage(
+        `${msg.total} keyword scraped successfully. Click here to see those!`
+      );
+    }
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    socket.on(socketEvents.keywordsScrapped, onSocketEvent);
+
     fetchKeywords()
       .then((response) => {
         setKeywords(response.data);
@@ -36,28 +59,39 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
       .catch((error) => {
         console.error("Error fetching keywords:", error);
       });
+
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("keywords_scraped_succeed", onSocketEvent);
+    };
   }, []);
 
-  // Calculate the indexes for the current page
   const indexOfLastKeyword = currentPage * itemsPerPage;
   const indexOfFirstKeyword = indexOfLastKeyword - itemsPerPage;
 
-  // Filter keywords based on search query
   const filteredKeywords = keywords.filter((keyword) =>
     keyword.value.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Change page
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  // Handle search input change
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
 
-  const hideToast = () => {
-    console.log(`toast clicked!`);
+  const hideToast = async () => {
     setToastMessage("");
+    try {
+      const response = await fetchKeywords();
+      setKeywords(response.data);
+    } catch (error) {
+      console.error("Error fetching keywords:", error);
+    }
+  };
+
+  const handleKeywordClick = (keyword: { id: string; value: string }) => {
+    setSelectedKeyword(keyword);
   };
 
   return (

@@ -14,7 +14,7 @@ import { UserEventTypes } from '../events/enum';
 
 const SEVEN_DAY_IN_MILIS = 7 * 24 * 60 * 60 * 1000;
 const SALT_ROUNDS = 13;
-const TOKEN_LIFETIME_IN_SECONDS = 86400; // 24 hours
+const TOKEN_LIFETIME_IN_SECONDS = 43200; // 12 hours
 const CODE_LENGTH = 255;
 
 export class UserService {
