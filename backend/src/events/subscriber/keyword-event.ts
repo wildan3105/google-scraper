@@ -1,7 +1,7 @@
 import { DataSource, EntityManager } from 'typeorm';
 import { Server } from 'socket.io';
-import express from 'express';
-import http from 'http';
+// import express from 'express';
+// import http from 'http';
 
 import { connect } from '../../db-connection';
 import { GoogleScraper, SearchResult } from '../../services/external/google-scraper';
@@ -12,7 +12,7 @@ import { KeywordService } from '../../services/keyword';
 import { IKeywordBulkCreateRequest } from '../../interfaces/keyword';
 import { KeywordRepository } from '../../libs/typeorm/repository/keyword';
 import { UserRepository } from '../../libs/typeorm/repository/user';
-import { SOCKET_PORT } from '../../config';
+// import { SOCKET_PORT } from '../../config';
 
 const socketEvents = {
     keywordsScrapedSuccessfully: 'keywords_scraped_succeed'
