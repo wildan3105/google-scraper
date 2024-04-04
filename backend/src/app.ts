@@ -4,12 +4,12 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 import helmet from 'helmet';
 import cors from 'cors';
-import path from 'path';
-import * as OpenApiValidator from 'express-openapi-validator';
+// import path from 'path';
+// import * as OpenApiValidator from 'express-openapi-validator';
 
-import swaggerUI from 'swagger-ui-express';
+// import swaggerUI from 'swagger-ui-express';
 // import YAML from 'yaml';
-import fs from 'fs';
+// import fs from 'fs';
 
 import { PORT } from './config';
 
@@ -59,7 +59,7 @@ export async function createApp(): Promise<{ app: Application; dataSource: DataS
     //     '/api-docs',
     //     swaggerUI.serve,
     //     swaggerUI.setup(swaggerDocument, {
-    //         customSiteTitle: 'Swagger UI for express-typescript-postgres-signup-login app'
+    //         customSiteTitle: 'Swagger UI for google scraper'
     //     })
     // );
 
