@@ -123,19 +123,11 @@ export class KeywordEventSubscriber {
     }
 }
 
-const startSubscriber = async () => {
+export const startSubscriber = async (io: Server) => {
     const dataSource = await connect();
     if (!dataSource) {
         throw new Error('Failed to initialize DB from subscriber');
     }
-
-    const app = express();
-    const server = http.createServer(app);
-    const io = new Server(server);
-
-    io.on('connection', () => {
-        console.log(`client is connected!`);
-    });
 
     const subscriber = new KeywordEventSubscriber(dataSource, io);
 
@@ -143,21 +135,8 @@ const startSubscriber = async () => {
 
     console.log(`subscriber started`);
 
-    server.listen(SOCKET_PORT, () => {
-        console.log(`listening on ${SOCKET_PORT}`);
-    });
-
     return async () => {
         console.log(`stopping subscriber`);
         await subscriber.stopListening(KeywordEventTypes.keywordsUploaded);
     };
 };
-
-(async () => {
-    try {
-        await startSubscriber();
-    } catch (e) {
-        console.log(`An error occurred`, e);
-        process.exit(1);
-    }
-})();
