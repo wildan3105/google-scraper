@@ -2,6 +2,7 @@ import 'source-map-support/register';
 
 import { createApp } from './app';
 import gracefulShutdown from 'http-graceful-shutdown';
+import { PORT } from './config';
 
 /**
  * Helper function to log an exit code before exiting the process.
@@ -40,8 +41,8 @@ const setupProcessEventListeners = () => {
 (async () => {
     try {
         const { app } = await createApp();
-        const server = app.listen(app.get('port'), () => {
-            console.log(`Started express server in environment: ${app.get('env')} on port: ${app.get('port')}`);
+        const server = app.listen(PORT, () => {
+            console.log(`Started express server in environment: ${app.get('env')} on port: ${PORT}`);
         });
 
         gracefulShutdown(server);
