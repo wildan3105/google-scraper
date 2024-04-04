@@ -29,6 +29,7 @@ interface Response {
 
 interface scrapeResult {
     userId: string;
+    userEmail: string | undefined;
     searchResult: SearchResult[];
 }
 
@@ -79,8 +80,11 @@ export class KeywordEventSubscriber {
             this.redis.on('message', async (_, message) => {
                 console.log(`start at: ${new Date().toLocaleTimeString()}`);
                 const cleansed: Response = JSON.parse(message);
+                // get userEmail to make the event unique for socket clients
+                const userEmail = (await this.userRepo.findOneByFilter({ id: cleansed.userId }))?.email;
                 const scrapeResult: scrapeResult = {
                     userId: cleansed.userId,
+                    userEmail,
                     searchResult: []
                 };
 
@@ -108,7 +112,7 @@ export class KeywordEventSubscriber {
 
                 const total = await this.bulkInsertKeywords(keywordEntities, scrapeResult.userId);
 
-                this.io.emit(socketEvents.keywordsScrapedSuccessfully, { userId: cleansed.userId, total });
+                this.io.emit(socketEvents.keywordsScrapedSuccessfully, { userId: cleansed.userId, userEmail, total });
 
                 console.log(`stop at: ${new Date().toLocaleTimeString()} for ${total}`);
             });

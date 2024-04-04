@@ -9,6 +9,7 @@ import "../styles/Home.scss";
 import { fetchKeywords, getKeywordsResponse } from "../services/keywordApis";
 import { socket } from "../services/socket";
 import { socketEvents } from "../configs/socket-event";
+import { itemNames } from "../configs/local-storage";
 
 const dateTimeFormat = "MMMM do yyyy, h:mm:ss a";
 const itemsPerPage = 25;
@@ -19,6 +20,7 @@ interface HomeProps {
 
 interface socketEvent {
   userId: string;
+  userEmail: string;
   total: number;
 }
 
@@ -43,9 +45,12 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
     }
 
     function onSocketEvent(msg: socketEvent) {
-      setToastMessage(
-        `${msg.total} keyword scraped successfully. Click here to see those!`
-      );
+      const currentUserEmail = localStorage.getItem(itemNames.userEmail);
+      if (msg.userEmail === currentUserEmail) {
+        setToastMessage(
+          `${msg.total} keyword scraped successfully. Click here to see those!`
+        );
+      }
     }
 
     socket.on("connect", onConnect);
