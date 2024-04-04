@@ -4,6 +4,7 @@ import {
   faCheckCircle,
   faExclamationCircle,
 } from "@fortawesome/free-solid-svg-icons";
+
 import { createUser } from "../services/userApis";
 import CustomModal from "./CustomModal";
 import { ErrorBody } from "../services";
