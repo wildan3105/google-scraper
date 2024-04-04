@@ -137,8 +137,4 @@ export class UserService {
             access_token: token
         };
     }
-
-    async logout(id: string): Promise<void> {
-        events.emit('user_logout', { user_id: id });
-    }
 }

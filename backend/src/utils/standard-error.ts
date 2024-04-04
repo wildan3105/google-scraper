@@ -13,7 +13,6 @@ export class StandardError extends Error {
     ) {
         super(message);
 
-        // So you can do typeof CustomError
         Object.setPrototypeOf(this, new.target.prototype);
 
         this.name = this.constructor.name;

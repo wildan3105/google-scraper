@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
   faExclamationCircle,
+  faClock,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { uploadCSV, UploadCSVResponse } from "../services/csvApis";
@@ -96,7 +97,7 @@ const CSV: React.FC = () => {
           <div>
             <p>
               Your CSV file has been successfully uploaded. Now it's waiting for
-              scraping result.
+              scraping result <FontAwesomeIcon icon={faClock} />
             </p>
             <p>
               Number of (unique) keywords inside the CSV:{" "}

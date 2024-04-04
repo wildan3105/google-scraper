@@ -41,11 +41,9 @@ export class RedisStorage extends EventEmitter {
             throw new Error('Redis client not initialized');
         }
 
-        // Add event listeners
         this.redisClient.on('error', (e) => {
             console.log(`An error occurred`, e);
         });
-        // Add other event listeners as needed
     }
 
     public async close(): Promise<void> {

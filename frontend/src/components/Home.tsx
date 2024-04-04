@@ -8,7 +8,7 @@ import Toast from "./Toast";
 import "../styles/Home.scss";
 import { fetchKeywords, getKeywordsResponse } from "../services/keywordApis";
 import { socket } from "../services/socket";
-import { socketEvents } from "../configs/socket-event";
+import { socketEventNames } from "../configs/socket-event";
 import { itemNames } from "../configs/local-storage";
 
 const dateTimeFormat = "MMMM do yyyy, h:mm:ss a";
@@ -18,10 +18,15 @@ interface HomeProps {
   userEmail: string | null;
 }
 
-interface socketEvent {
+interface SocketEvent {
   userId: string;
   userEmail: string;
   total: number;
+}
+
+interface ToastMessage {
+  id: number;
+  message: string;
 }
 
 const Home: React.FC<HomeProps> = ({ userEmail }) => {
@@ -32,7 +37,7 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
   } | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [toastMessage, setToastMessage] = useState<string>("");
+  const [toastMessages, setToastMessages] = useState<ToastMessage[]>([]);
   const [_, setIsConnected] = useState(socket.connected);
 
   useEffect(() => {
@@ -44,18 +49,23 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
       setIsConnected(false);
     }
 
-    function onSocketEvent(msg: socketEvent) {
+    function onSocketEvent(msg: SocketEvent) {
       const currentUserEmail = localStorage.getItem(itemNames.userEmail);
       if (msg.userEmail === currentUserEmail) {
-        setToastMessage(
-          `${msg.total} keyword scraped successfully. Click here to see those!`
-        );
+        const timestamp = new Date().getTime();
+        setToastMessages((previous) => [
+          ...previous,
+          {
+            id: timestamp,
+            message: `${msg.total} keyword scraped successfully. Click here to see those!`,
+          },
+        ]);
       }
     }
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
-    socket.on(socketEvents.keywordsScrapped, onSocketEvent);
+    socket.on(socketEventNames.keywordsScrapped, onSocketEvent);
 
     fetchKeywords()
       .then((response) => {
@@ -86,7 +96,7 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
   };
 
   const hideToast = async () => {
-    setToastMessage("");
+    setToastMessages([]);
     try {
       const response = await fetchKeywords();
       setKeywords(response.data);
@@ -101,7 +111,9 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
 
   return (
     <>
-      {toastMessage && <Toast message={toastMessage} onClick={hideToast} />}
+      {toastMessages.map(({ id, message }) => (
+        <Toast key={id} message={message} onClick={hideToast} />
+      ))}
       <div className="homepage">
         <div className="welcome-message">
           {userEmail && (

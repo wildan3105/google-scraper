@@ -19,7 +19,6 @@ export class UserController {
         this.router.post('/', this.post.bind(this));
         this.router.get('/verify', this.verify.bind(this));
         this.router.post('/auth/login', this.login.bind(this));
-        this.router.post('/auth/logout', verifyToken, this.logout.bind(this));
 
         // keywords
         this.router.get('/keywords', verifyToken, this.getUserKeywords.bind(this));
@@ -61,17 +60,6 @@ export class UserController {
         try {
             const loginResponse = await this.userService.login(req.body);
             return res.status(200).json(loginResponse);
-        } catch (err) {
-            return next(err);
-        }
-    }
-
-    public async logout(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
-        try {
-            await this.userService.logout(req.userId);
-            return res.status(200).json({
-                status: 'ok'
-            });
         } catch (err) {
             return next(err);
         }

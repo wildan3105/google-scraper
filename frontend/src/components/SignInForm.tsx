@@ -64,6 +64,7 @@ const SignInForm: React.FC = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            autoComplete="on"
           />
         </div>
         <button type="submit">Sign in</button>

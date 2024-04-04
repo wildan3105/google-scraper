@@ -4,6 +4,7 @@ import {
   faCheckCircle,
   faExclamationCircle,
 } from "@fortawesome/free-solid-svg-icons";
+
 import { createUser } from "../services/userApis";
 import CustomModal from "./CustomModal";
 import { ErrorBody } from "../services";
@@ -58,6 +59,7 @@ const SignUpForm: React.FC = () => {
             placeholder="Your secured password"
             onChange={(e) => setPassword(e.target.value)}
             required
+            autoComplete="on"
           />
         </div>
         <button type="submit">Sign up</button>

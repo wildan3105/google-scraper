@@ -1,7 +1,5 @@
 /* eslint no-process-env: "off" */
 
-// NOTE: All env vars from process.env are imported as STRINGS. It is important to keep this in mind and cast your env vars as needed.
-
 import { injectEnv } from './libs/env';
 
 injectEnv();
