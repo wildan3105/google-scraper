@@ -63,13 +63,13 @@ export async function createApp(): Promise<{ app: Application; dataSource: DataS
     //     })
     // );
 
-    app.use(
-        OpenApiValidator.middleware({
-            apiSpec: './docs/openapi.yaml',
-            validateRequests: true, // (default)
-            validateResponses: true // false by default
-        })
-    );
+    // app.use(
+    //     OpenApiValidator.middleware({
+    //         apiSpec: './docs/openapi.yaml',
+    //         validateRequests: true, // (default)
+    //         validateResponses: true // false by default
+    //     })
+    // );
 
     // This should be last, right before routes are installed
     // so we can have access to context of all previously installed
