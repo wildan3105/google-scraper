@@ -1,20 +1,31 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    watch: {
-      usePolling: true,
+import dotenv from "dotenv";
+
+dotenv.config();
+
+export default defineConfig(({ mode }) => {
+  return {
+    define: {
+      __APP_ENV__: JSON.stringify(mode),
+      __BACKEND_URL__: JSON.stringify(process.env.BACKEND_URL),
+      __SOCKET_URL__: JSON.stringify(process.env.SOCKET_URL),
     },
-    host: "0.0.0.0",
-    proxy: {
-      "/socket": {
-        target: "http://localhost:2000", // TODO: load the base url from environment variable
-        changeOrigin: true,
-        ws: true,
+
+    plugins: [react()],
+    server: {
+      watch: {
+        usePolling: true,
+      },
+      host: "0.0.0.0",
+      proxy: {
+        "/socket": {
+          target: process.env.SOCKET_URL || "http://localhost:2000",
+          changeOrigin: true,
+          ws: true,
+        },
       },
     },
-  },
+  };
 });

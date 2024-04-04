@@ -11,6 +11,7 @@
 
 1. Clone the project
 2. Install dependencies: `npm i`
+3. Copy the environment variable and adjust the value accordingly: `cp .env.example .env`
 
 #### Using TypeScript (simulate development)
 
