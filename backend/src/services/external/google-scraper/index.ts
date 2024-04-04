@@ -67,7 +67,7 @@ export class GoogleScraper {
                 numAdwords,
                 totalResultsText: totalResultsText || null,
                 keyword,
-                htmlContent: compressedHtmlContent.toString('base64') // Convert to base64 to store binary data as string
+                htmlContent: compressedHtmlContent.toString('base64')
             };
         } catch (error) {
             console.error(`Error while scraping keyword "${keyword}":`, error);

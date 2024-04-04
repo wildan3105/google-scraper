@@ -44,10 +44,10 @@ interface MergeFields {
 }
 
 interface Attachments {
-    BinaryContent: string; // base-64 encoded string
+    BinaryContent: string;
     Name: string;
     ContentType?: string;
-    Size?: number; // in bytes
+    Size?: number;
 }
 
 interface EmailHeaders {

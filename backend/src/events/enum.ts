@@ -5,6 +5,5 @@ export enum UserEventTypes {
 }
 
 export enum KeywordEventTypes {
-    keywordsUploaded = 'keywords_uploaded',
-    keywordsScraped = 'keywords_scraped'
+    keywordsUploaded = 'keywords_uploaded'
 }
