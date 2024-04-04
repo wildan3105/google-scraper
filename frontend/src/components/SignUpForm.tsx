@@ -58,6 +58,7 @@ const SignUpForm: React.FC = () => {
             placeholder="Your secured password"
             onChange={(e) => setPassword(e.target.value)}
             required
+            autoComplete="on"
           />
         </div>
         <button type="submit">Sign up</button>
