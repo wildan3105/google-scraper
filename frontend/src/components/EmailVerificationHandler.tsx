@@ -25,18 +25,22 @@ const EmailVerificationHandler: React.FC<EmailVerificationHandlerProps> = ({
     failed: "danger",
   };
 
+  const redirectTo = (path: string): void => {
+    const timer = setInterval(() => {
+      setCountdown((prevCountdown) => prevCountdown - 1);
+    }, 1000);
+    setTimeout(() => {
+      clearInterval(timer);
+      navigate(path);
+    }, 5000);
+  };
+
   useEffect(() => {
     if (verificationCode) {
       verifyUserEmail({ code: verificationCode })
         .then(() => {
           setVerificationStatus("success");
-          const timer = setInterval(() => {
-            setCountdown((prevCountdown) => prevCountdown - 1);
-          }, 1000);
-          setTimeout(() => {
-            clearInterval(timer);
-            navigate("/signin");
-          }, 5000);
+          redirectTo("/signin");
         })
         .catch((error: any) => {
           if (
@@ -47,6 +51,7 @@ const EmailVerificationHandler: React.FC<EmailVerificationHandlerProps> = ({
             const errorBody: ErrorBody = error.response.data;
             setErrorMessage(errorBody.message);
             setVerificationStatus("failed");
+            redirectTo("/");
           }
         });
     }
@@ -61,7 +66,10 @@ const EmailVerificationHandler: React.FC<EmailVerificationHandlerProps> = ({
         {verificationStatus === "loading" && <p>Verifying...</p>}
         {verificationStatus === "success" && <p>Verification success!</p>}
         {verificationStatus === "failed" && (
-          <p>Verification failed. Error details: {errorMessage}</p>
+          <>
+            <p>Verification failed. Error details: {errorMessage}</p>
+            <p>Redirecting to landing page in {countdown} seconds...</p>
+          </>
         )}
       </div>
       {verificationStatus === "success" && (
