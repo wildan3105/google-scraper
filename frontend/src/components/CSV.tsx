@@ -58,8 +58,9 @@ const CSV: React.FC = () => {
 
   const parseCSV = (csvContent: string): string[] => {
     const lines = csvContent.split(/\r?\n/);
+    const nonEmptyLines = lines.filter((line) => line.trim() !== "");
 
-    return lines;
+    return nonEmptyLines;
   };
 
   const handleUploadSuccess = (_: UploadCSVResponse) => {
