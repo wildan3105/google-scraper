@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { io } from "socket.io-client";
 
 import CSV from "./CSV";
 import KeywordDetails from "./KeywordDetails";
@@ -9,6 +8,7 @@ import Toast from "./Toast";
 import "../styles/Home.scss";
 import { fetchKeywords, getKeywordsResponse } from "../services/keywordApis";
 import { socket } from "../services/socket";
+import { socketEvents } from "../configs/socket-event";
 
 const dateTimeFormat = "MMMM do yyyy, h:mm:ss a";
 const itemsPerPage = 25;
@@ -31,12 +31,10 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [toastMessage, setToastMessage] = useState<string>("");
-  const [isConnected, setIsConnected] = useState(socket.connected);
-  const [fooEvents, setFooEvents] = useState([]);
+  const [_, setIsConnected] = useState(socket.connected);
 
   useEffect(() => {
     function onConnect() {
-      console.log(`socket connected is true`);
       setIsConnected(true);
     }
 
@@ -44,19 +42,16 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
       setIsConnected(false);
     }
 
-    function onFooEvent(msg: socketEvent) {
+    function onSocketEvent(msg: socketEvent) {
       setToastMessage(
         `${msg.total} keyword scraped successfully. Click here to see those!`
       );
     }
 
-    console.log("is WebSocket Connected?", socket.connected);
-
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
-    socket.on("keywords_scraped_succeed", onFooEvent);
+    socket.on(socketEvents.keywordsScrapped, onSocketEvent);
 
-    // Fetch keywords
     fetchKeywords()
       .then((response) => {
         setKeywords(response.data);
@@ -65,11 +60,10 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
         console.error("Error fetching keywords:", error);
       });
 
-    // Clean up socket connection on component unmount
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
-      socket.off("keywords_scraped_succeed", onFooEvent);
+      socket.off("keywords_scraped_succeed", onSocketEvent);
     };
   }, []);
 
@@ -89,7 +83,6 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
   const hideToast = async () => {
     setToastMessage("");
     try {
-      // Re-fetch the keywords
       const response = await fetchKeywords();
       setKeywords(response.data);
     } catch (error) {
