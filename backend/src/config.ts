@@ -13,6 +13,7 @@ export const APP_MODE = process.env.APP_MODE || 'development';
 export const APP_NAME = process.env.APP_NAME || 'google-scraper';
 
 export const PORT = process.env.PORT;
+export const SOCKET_PORT = process.env.SOCKET_PORT || 2000;
 
 export const IS_PRODUCTION = APP_ENV === 'production';
 export const IS_LOCAL = APP_ENV === 'local';
