@@ -1,0 +1,20 @@
+name: "Frontend module test"
+description: "Run frontend module tests"
+
+inputs:
+  working-dir:
+    description: "The path of frontend module"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install dependencies
+      run: npm install
+      shell: bash
+      working-directory: ${{ inputs.working-dir }}
+
+    - name: Run tests
+      run: npm run test
+      shell: bash
+      working-directory: ${{ inputs.working-dir }}
