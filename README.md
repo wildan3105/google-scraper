@@ -13,7 +13,10 @@
 
 > During my demonstration, I aimed to showcase different file upload scenarios, including invalid CSV files, uploads with empty keyword fields, and successful uploads. Unfortunately, due to limitations with the screen recording software, the file upload segment wasn't captured in the video.
 
-![Watch the demo!](https://jumpshare.com/v/EvHhUdtbWcqlZFzDT2b0)
+<div style="position: relative; padding-bottom: 56.25%; height: 0;">
+    <iframe src="https://jumpshare.com/embed/EvHhUdtbWcqlZFzDT2b0" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+    </iframe>
+</div>
 
 ## Tech stacks
 
