@@ -2,12 +2,18 @@
 
 ## Features
 
-- User sign up
-- User account verification (via email)
-- User sign in
-- Upload CSV per user up to 100 keywords per upload with instant notification upon scraping result
-- Show the result of google search for each keyword (number of links, number of adwords, overview of search result info, and HTML page)
-- Search across keywords per user
+- **User Registration**: Allows users to sign up for an account.
+- **Email Verification**: Verifies user accounts through email confirmation.
+- **User Authentication**: Enables users to securely sign in to their accounts.
+- **CSV Keyword Upload**: Permits users to upload CSV files containing up to 100 keywords per upload, with instant notification upon completion of scraping.
+- **Google Search Result Display**: Shows search result details for each keyword, including the number of links, adwords, an overview of search information, and HTML page previews.
+- **Keyword Search**: Allows users to search across their uploaded keywords for specific information
+
+## Demo
+
+> During my demonstration, I aimed to showcase different file upload scenarios, including invalid CSV files, uploads with empty keyword fields, and successful uploads. Unfortunately, due to limitations with the screen recording software, the file upload segment wasn't captured in the video.
+
+![demo!](./demo/demo.mp4)
 
 ## Tech stacks
 
