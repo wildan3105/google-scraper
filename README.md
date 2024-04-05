@@ -34,7 +34,8 @@ Please check the readme of corresponding directory:
 
 ## Testing
 
-TBD
+- [backend](./backend/tests/)
+- [frontend](./frontend/tests/)
 
 ## Deployment
 
