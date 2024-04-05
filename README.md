@@ -1,6 +1,27 @@
 ## Google scraper fullstack application
 
+## Features
+
+- **User Registration**: Allows users to sign up for an account.
+- **Email Verification**: Verifies user accounts through email confirmation.
+- **User Authentication**: Enables users to securely sign in to their accounts.
+- **CSV Keyword Upload**: Permits users to upload CSV files containing up to 100 keywords per upload, with instant notification upon completion of scraping.
+- **Google Search Result Display**: Shows search result details for each keyword, including the number of links, adwords, an overview of search information, and HTML page previews.
+- **Keyword Search**: Allows users to search across their uploaded keywords for specific information
+
+## Demo
+
+> During my demonstration, I aimed to showcase different file upload scenarios, including invalid CSV files, uploads with empty keyword fields, and successful uploads. Unfortunately, due to limitations with the screen recording software, the file upload segment wasn't captured in the video.
+
+[video](https://github.com/wildan3105/google-scraper/assets/7030099/4f5320ca-7ca1-47a7-9a00-ae58f7a48a0b)
+
+Source: [video](https://jumpshare.com/v/EvHhUdtbWcqlZFzDT2b0)
+
 ## Tech stacks
+
+### High-level architecture
+
+TBD
 
 ### Backend
 
@@ -27,8 +48,6 @@
 
 ## How to run
 
-Please check the readme of corresponding directory:
-
 - [backend](./backend/README.md)
 - [frontend](./frontend/README.md)
 
@@ -39,4 +58,9 @@ Please check the readme of corresponding directory:
 
 ## Deployment
 
-TBD
+> Because of time constraints, the deployment strategy employed was not optimal. As a result, both the frontend and backend were deployed using development mode, potentially leading to suboptimal performance.
+
+This project is deployed at Heroku with the following addresses:
+
+- frontend: [https://google-scraper-web-7922a635d04a.herokuapp.com](https://google-scraper-web-7922a635d04a.herokuapp.com)
+- backend: [https://google-scraper-7cabe000fda7.herokuapp.com](https://google-scraper-7cabe000fda7.herokuapp.com)
