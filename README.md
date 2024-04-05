@@ -13,7 +13,7 @@
 
 > During my demonstration, I aimed to showcase different file upload scenarios, including invalid CSV files, uploads with empty keyword fields, and successful uploads. Unfortunately, due to limitations with the screen recording software, the file upload segment wasn't captured in the video.
 
-![demo!](./demo/demo.mp4)
+![Watch the demo!](https://jumpshare.com/v/EvHhUdtbWcqlZFzDT2b0)
 
 ## Tech stacks
 
