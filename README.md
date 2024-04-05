@@ -13,10 +13,9 @@
 
 > During my demonstration, I aimed to showcase different file upload scenarios, including invalid CSV files, uploads with empty keyword fields, and successful uploads. Unfortunately, due to limitations with the screen recording software, the file upload segment wasn't captured in the video.
 
-<div style="position: relative; padding-bottom: 56.25%; height: 0;">
-    <iframe src="https://jumpshare.com/embed/EvHhUdtbWcqlZFzDT2b0" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
-    </iframe>
-</div>
+[video](https://github.com/wildan3105/google-scraper/assets/7030099/4f5320ca-7ca1-47a7-9a00-ae58f7a48a0b)
+
+Source: [video](https://jumpshare.com/v/EvHhUdtbWcqlZFzDT2b0)
 
 ## Tech stacks
 
