@@ -1,7 +1,7 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import "@types/jest";
+// import "@types/jest";
 import Toast from "../../src/components/Toast";
 
 describe("Toast component", () => {
