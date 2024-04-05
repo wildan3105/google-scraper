@@ -42,6 +42,7 @@ const Home: React.FC<HomeProps> = ({ userEmail }) => {
 
   useEffect(() => {
     function onConnect() {
+      console.log(`socket is connected!`);
       setIsConnected(true);
     }
 
