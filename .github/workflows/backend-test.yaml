@@ -2,20 +2,47 @@ name: Backend test
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
+    paths:
+      - backend/**
+      - .github/actions/backend_test/**
+      - .github/workflows/backend-test.yaml
+
   pull_request:
-    branches: ["main"]
+    branches:
+      - main
+    paths:
+      - backend/**
+      - .github/actions/backend_test/**
+      - .github/workflows/backend-test.yaml
+
+  workflow_dispatch:
 
 jobs:
-  build:
+  backend-test:
+    name: Backend module test
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: ./backend
-
     steps:
+      - name: Setup timezone
+        run: sudo timedatectl set-timezone "Asia/Jakarta"
+
       - uses: actions/checkout@v4
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run test
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Cache Node.js packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Run backend tests
+        uses: ./.github/actions/backend_test
+        with:
+          working-dir: ./backend
